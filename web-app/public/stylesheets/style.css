@@ -122,9 +122,9 @@ td {
   color: #f1c40f;
 }
 
-.items .card, .items-redeem .card{
+/* .items .card, .items-redeem .card{
   box-shadow: 4px 4px 5px rgba(0, 0, 0, .3);
-}
+} */
 
 .member-list .card img {
   width: 100%;
