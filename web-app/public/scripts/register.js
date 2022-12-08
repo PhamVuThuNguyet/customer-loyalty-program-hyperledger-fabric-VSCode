@@ -1,5 +1,7 @@
 'use strict';
 
+import {toast} from './toast.js';
+
 //check user input and call server to create dataset
 $('.register-member').click(async function () {
     try {
@@ -27,7 +29,7 @@ $('.register-member').click(async function () {
         document.getElementById('registration-info').style.display = 'none';
     } catch (error) {
         document.getElementById('loader').style.display = 'none';
-        alert(error.response.statusText || 'An error has occurred!');
+        toast("error", error.response.statusText || 'An error has occurred!');
     }
 });
 
@@ -55,6 +57,6 @@ $('.register-partner').click(async function () {
     } catch (error) {
         document.getElementById('loader').style.display = 'none';
         document.getElementById('registration').style.display = 'block';
-        alert(error.response.statusText || 'An error has occurred!');
+        toast("error", error.response.statusText || 'An error has occurred!');
     }
 });
