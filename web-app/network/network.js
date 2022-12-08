@@ -1,4 +1,103 @@
+/**
+ * VKU_NPC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 'use strict';
+
+// Import dependencies
+require('dotenv').config();
+const grpc = require('@grpc/grpc-js');
+const { connect, signers } = require('@hyperledger/fabric-gateway');
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+const { TextDecoder } = require('util');
+
+const utf8Decoder = new TextDecoder();
+
+// Environment variables
+const channelName = process.env.CHANNEL_NAME;
+const chaincodeName = process.env.CHAINCODE_NAME;
+const mspId = process.env.MSP_ID;
+const peerEndpoint = process.env.PEER_END_POINT;
+const peerHostAlias = process.env.PEER_HOST_ALIAS;
+
+//Path to crypto materials
+const cryptoPath = path.resolve(__dirname,
+    '..',
+    '..',
+    'test-network',
+    'organizations',
+    'peerOrganizations',
+    'org1.example.com');
+
+//Path to use private key directory
+const keyDirectoryPath = path.resolve(cryptopath,
+    'users',
+    'User1@org1.example.com',
+    'msp',
+    'keystore');
+
+//Path to user certificate
+const certPath = path.resolve(cryptopath,
+    'users',
+    'User1@org1.example.com',
+    'msp',
+    'signcerts',
+    'cert.pem');
+
+//Path to peer tls certificate
+const tlsCertPath = path.resolve(cryptoPath,
+    'peers',
+    'peer0.org1.example.com',
+    'tls',
+    'ca.crt');
+
+
+/**
+ * Function to generate new client connect to grpc gateway */
+async function newGrpcConnection() {
+    const tlsRootCert = await fs.readFileSync(tlsCertPath);
+    const tlsCredentials = grpc.credentials.createSsl(tlsRootCert);
+    return new grpc.Client(peerEndpoint, tlsCredentials, { 'grpc.ssl_target_name_override': peerHostAlias });
+}
+
+/**
+ * Function to create new Identity for user */
+async function newIdentity() {
+    const credentials = await fs.readFileSync(certPath);
+    return { mspId, credentials };
+}
+
+/**
+ * Function to create new private key for signer */
+async function newSigner() {
+    const files = await fs.readdirSync(keyDirectoryPath);
+    const keyPath = path.resolve(keyDirectoryPath, files[0]);
+    const privateKeyPem = await fs.readFileSync(keyPath);
+    const privateKey = crypto.createPrivateKey(privateKeyPem);
+    return signers.newPrivateKeySigner(privateKey);
+}
+
+async function getContract() {
+    const client = await newGrpcConnection();
+    const gateway = connect({
+        client,
+        identity: await newIdentity();
+        signer: await newSigner()
+    });
+
+    try {
+        const network = gateway.getNetwork(channelName);
+        const contract = network.getContract(chaincodeName);
+        return contract;
+    } catch (err) {
+        let error = {}
+        error.error = err.message;
+        return error;
+    }
+}
 
 
 //export module

@@ -32,6 +32,7 @@ jobs:
           
       - name: Copy environment variables
         run: |
+          cd web-app
           cp .env.dev .env
 
       - name: Install dependencies
