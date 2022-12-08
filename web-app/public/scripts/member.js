@@ -1,5 +1,7 @@
 'use strict';
 
+import { toast } from './toast.js';
+
 async function updateMember() {
     try {
         const accountnumber = $('.account-number input').val();
@@ -12,8 +14,7 @@ async function updateMember() {
         const { data } = await axios.post('/api/members/data', inputData);
         localStorage.setItem('token', data.token);
 
-        document.querySelector('#login-button').style.display = 'none';
-        document.querySelector('#logout-button').style.display = 'block';
+        toggleLogoutButton();
         
         document.getElementById('loader').style.display = 'none';
         $('.heading').html(function () {
@@ -397,3 +398,14 @@ $('#logout-button > a').on('click', (e) => {
     localStorage.removeItem('token');
     window.location.replace('/');
 });
+
+function toggleLogoutButton() {
+    const token = localStorage.getItem('token');
+    if (token) {
+        $('#logout-button').css({ display: 'block' });
+        $('#login-button').css({ display: 'none' });
+    } else {
+        $('#logout-button').css({ display: 'none' });
+        $('#login-button').css({ display: 'block' });
+    }
+}
