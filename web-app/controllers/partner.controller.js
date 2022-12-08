@@ -107,7 +107,7 @@ class PartnerController {
             returnData.token = generateToken({
                 id: partnerid,
                 cardid,
-                role: 'member',
+                role: 'partner',
             });
             res.json(returnData);
         } catch (error) {
