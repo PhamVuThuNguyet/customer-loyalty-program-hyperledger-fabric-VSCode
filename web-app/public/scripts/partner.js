@@ -9,7 +9,7 @@ async function updatePartner() {
             partnerid,
             cardid,
         };
-        document.getElementById('loader').style.display = 'block';
+        document.getElementById('loader').style.display = 'flex';
         const { data } = await axios.post('/api/partners/data', inputData);
         localStorage.setItem('token', data.token);
         document.getElementById('loader').style.display = 'none';
