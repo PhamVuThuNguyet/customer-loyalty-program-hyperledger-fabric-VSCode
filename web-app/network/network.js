@@ -33,14 +33,14 @@ const cryptoPath = path.resolve(__dirname,
     'org1.example.com');
 
 //Path to use private key directory
-const keyDirectoryPath = path.resolve(cryptopath,
+const keyDirectoryPath = path.resolve(cryptoPath,
     'users',
     'User1@org1.example.com',
     'msp',
     'keystore');
 
 //Path to user certificate
-const certPath = path.resolve(cryptopath,
+const certPath = path.resolve(cryptoPath,
     'users',
     'User1@org1.example.com',
     'msp',
@@ -84,7 +84,7 @@ async function getContract() {
     const client = await newGrpcConnection();
     const gateway = connect({
         client,
-        identity: await newIdentity();
+        identity: await newIdentity(),
         signer: await newSigner()
     });
 
