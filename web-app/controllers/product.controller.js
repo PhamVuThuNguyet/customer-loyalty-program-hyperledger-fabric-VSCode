@@ -34,6 +34,7 @@ class ProductController {
      */
     async create(req, res) {
         try {
+            req.body.partnerId = 'P' + req.body.partnerId;
             const validation = await validate.validateProduct(req.body);
             if (validation.error) {
                 res.statusCode = 400;

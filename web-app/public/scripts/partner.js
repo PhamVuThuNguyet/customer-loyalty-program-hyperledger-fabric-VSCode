@@ -22,7 +22,7 @@ fileInput.addEventListener('change', (e) => {
 async function getProductList() {
     const partnerId = $('.partner-id input').val();
     const { data: productData } = await axios.get(
-        '/api/products/partner/' + partnerId
+        '/api/products/partner/P' + partnerId
     );
 
     $('.items').html(function () {
@@ -102,6 +102,7 @@ const uploadFile = async (file) => {
 $('#add-product-form').on('submit', async (e) => {
     e.preventDefault();
     try {
+        document.getElementById('loader').style.display = 'flex';
         const partnerId = $('.partner-id input').val();
 
         $('#product-submit').attr('disabled', true);
@@ -130,9 +131,10 @@ $('#add-product-form').on('submit', async (e) => {
         $('#product-image').val('');
         $('.custom-file-label').text('Choose product image');
         $('#product-submit').attr('disabled', false);
+        document.getElementById('loader').style.display = 'none';
     } catch (e) {
+        document.getElementById('loader').style.display = 'none';
         toast('error', 'An error was occurred');
-        console.log(e);
         $('#product-submit').attr('disabled', false);
     }
 });
@@ -165,7 +167,7 @@ async function updatePartner() {
             partnerid,
             cardid,
         };
-        document.getElementById('loader').style.display = 'block';
+        document.getElementById('loader').style.display = 'flex';
         const { data } = await axios.post('/api/partners/data', inputData);
         localStorage.setItem('token', data.token);
         document.getElementById('loader').style.display = 'none';
@@ -273,7 +275,7 @@ const checkLogin = async () => {
             });
             if (user.role === 'partner') {
                 $('.partner-id input').val(user.id);
-                $('.card-id input').val(user.cardId);
+                $('.card-id input').val(user.cardid);
                 await updatePartner();
             } else {
                 location.replace('/member');
@@ -308,21 +310,18 @@ async function earnPoints(points) {
     };
 
     try {
-        document.getElementById('loader').style.display = 'block';
-        document.getElementById('infoSection').style.display = 'none';
+        document.getElementById('loader').style.display = 'flex';
         await axios.post('/api/members/earn-points', inputData, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`,
             },
         });
         document.getElementById('loader').style.display = 'none';
-        document.getElementById('infoSection').style.display = 'block';
 
         await updatePartner();
         alert('Transaction successful');
     } catch (error) {
         document.getElementById('loader').style.display = 'none';
-        document.getElementById('infoSection').style.display = 'block';
         alert(error.response.statusText);
     }
 }
@@ -335,7 +334,7 @@ $('.earn-points-transaction').click(async function () {
     }
 
     const partnerid = $('.partner-id input').val();
-    let productData = await axios.get('/api/products/partner/' + partnerid);
+    let productData = await axios.get('/api/products/partner/P' + partnerid);
 
     productData = productData.data;
     let totalPoint = 0;
@@ -371,8 +370,7 @@ async function usePoints(points) {
     };
 
     try {
-        document.getElementById('loader').style.display = 'block';
-        document.getElementById('infoSection').style.display = 'none';
+        document.getElementById('loader').style.display = 'flex';
         await axios.post('/api/members/use-points', inputData, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -381,10 +379,8 @@ async function usePoints(points) {
         await updatePartner();
         alert('Transaction successful');
         document.getElementById('loader').style.display = 'none';
-        document.getElementById('infoSection').style.display = 'block';
     } catch (error) {
         document.getElementById('loader').style.display = 'none';
-        document.getElementById('infoSection').style.display = 'block';
         alert(error.response.statusText);
     }
 }
@@ -397,7 +393,7 @@ $('.use-points-transaction').click(async function () {
 
     const partnerid = $('.partner-id input').val();
 
-    let productData = await axios.get('/api/products/partner/' + partnerid);
+    let productData = await axios.get('/api/products/partner/P' + partnerid);
     console.log(productData);
     productData = productData.data;
 

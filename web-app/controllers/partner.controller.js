@@ -105,7 +105,7 @@ class PartnerController {
                 earnPointsResults
             );
             returnData.token = generateToken({
-                id: partnerid,
+                id: req.body.partnerid,
                 cardid,
                 role: 'partner',
             });

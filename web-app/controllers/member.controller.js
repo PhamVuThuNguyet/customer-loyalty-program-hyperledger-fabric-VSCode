@@ -73,7 +73,9 @@ class MemberController {
      */
     async earnPoints(req, res) {
         try {
-            const { accountnumber, cardid, partnerid } = req.body;
+            const { cardid } = req.body;
+            const accountnumber = 'M' + req.body.accountnumber;
+            const partnerid = 'P' + req.body.partnerid;
             //declare variables to retrieve from request
             const points = parseFloat(req.body.points);
 
@@ -82,6 +84,8 @@ class MemberController {
                 res.statusMessage = checkPoints.error;
                 return res.sendStatus(400);
             }
+
+            console.log(cardid, accountnumber, partnerid, checkPoints);
 
             const response = await network.earnPointsTransaction(
                 cardid,
@@ -109,7 +113,9 @@ class MemberController {
      */
     async usePoints(req, res) {
         try {
-            const { accountnumber, cardid, partnerid } = req.body;
+            const { cardid } = req.body;
+            const accountnumber = 'M' + req.body.accountnumber;
+            const partnerid = 'P' + req.body.partnerid;
             const points = parseFloat(req.body.points);
 
             const checkPoints = await validate.validatePoints(points);
@@ -193,7 +199,7 @@ class MemberController {
             returnData.earnPointsResult = earnPointsResults;
             returnData.partnersData = partnersInfo;
             returnData.token = generateToken({
-                id: accountnumber,
+                id: req.body.accountnumber,
                 cardid,
                 role: 'member',
             });

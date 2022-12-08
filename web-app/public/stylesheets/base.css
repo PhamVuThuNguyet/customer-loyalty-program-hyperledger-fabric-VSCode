@@ -8,7 +8,7 @@ body {
 }
 
 .loader {
-    display: none;
+    display: flex;
     background: rgba(0, 0, 0, 0.7);
     position: fixed;
     bottom: 0;
