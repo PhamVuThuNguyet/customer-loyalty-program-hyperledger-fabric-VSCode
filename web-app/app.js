@@ -1,3 +1,8 @@
+/**
+ * VKU_NPC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ */
 'use strict';
 
 //get libraries
@@ -9,381 +14,278 @@ const path = require('path');
 const app = express();
 
 //get the libraries to call
-let network = require('./network/network.js');
-let validate = require('./network/validate.js');
-let analysis = require('./network/analysis.js');
+const network = require('./network/network.js');
+const validate = require('./network/validate.js');
+const analysis = require('./network/analysis.js');
 
 //bootstrap application settings
 app.use(express.static('./public'));
 app.use('/scripts', express.static(path.join(__dirname, '/public/scripts')));
 app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 //get home page
-app.get('/home', function(req, res) {
+app.get('/home', function (req, res) {
     res.sendFile(path.join(__dirname + '/public/index.html'));
 });
 
 //get member page
-app.get('/member', function(req, res) {
+app.get('/member', function (req, res) {
     res.sendFile(path.join(__dirname + '/public/member.html'));
 });
 
 //get member registration page
-app.get('/registerMember', function(req, res) {
+app.get('/registerMember', function (req, res) {
     res.sendFile(path.join(__dirname + '/public/registerMember.html'));
 });
 
 //get partner page
-app.get('/partner', function(req, res) {
+app.get('/partner', function (req, res) {
     res.sendFile(path.join(__dirname + '/public/partner.html'));
 });
 
 //get partner registration page
-app.get('/registerPartner', function(req, res) {
+app.get('/registerPartner', function (req, res) {
     res.sendFile(path.join(__dirname + '/public/registerPartner.html'));
 });
 
 //get about page
-app.get('/about', function(req, res) {
+app.get('/about', function (req, res) {
     res.sendFile(path.join(__dirname + '/public/about.html'));
 });
 
-
 //post call to register member on the network
-app.post('/api/registerMember', function(req, res) {
+app.post('/api/registerMember', async function (req, res) {
+    try {
+        const {
+            accountnumber,
+            cardid,
+            firstname,
+            lastname,
+            email,
+            phonenumber,
+        } = req.body;
 
-    //declare variables to retrieve from request
-    let accountNumber = req.body.accountnumber;
-    let cardId = req.body.cardid;
-    let firstName = req.body.firstname;
-    let lastName = req.body.lastname;
-    let email = req.body.email;
-    let phoneNumber = req.body.phonenumber;
+        const validation = await validate.validateMemberRegistration(
+            cardid,
+            accountnumber,
+            firstname,
+            lastname,
+            email,
+            phonenumber
+        );
+        if (validation.error) {
+            res.statusMessage = validation.error;
+            return res.sendStatus(400);
+        }
 
-    //print variables
-    console.log('Using param - firstname: ' + firstName + ' lastname: ' + lastName + ' email: ' + email + ' phonenumber: ' + phoneNumber + ' accountNumber: ' + accountNumber + ' cardId: ' + cardId);
+        const response = await network.registerMember(
+            cardid,
+            accountnumber,
+            firstname,
+            lastname,
+            email,
+            phonenumber
+        );
+        if (response.error) {
+            res.statusMessage = response.error;
+            return res.sendStatus(400);
+        }
 
-    //validate member registration fields
-    validate.validateMemberRegistration(cardId, accountNumber, firstName, lastName, email, phoneNumber)
-        .then((response) => {
-            //return error if error in response
-            if (typeof response === 'object' && 'error' in response && response.error !== null) {
-                res.json({
-                    error: response.error
-                });
-                return;
-            } else {
-                //else register member on the network
-                network.registerMember(cardId, accountNumber, firstName, lastName, email, phoneNumber)
-                    .then((response) => {
-                        //return error if error in response
-                        if (typeof response === 'object' && 'error' in response && response.error !== null) {
-                            res.json({
-                                error: response.error
-                            });
-                        } else {
-                            //else return success
-                            res.json({
-                                success: response
-                            });
-                        }
-                    });
-            }
-        });
-
-
+        res.sendStatus(201);
+    } catch (error) {
+        res.sendStatus(500);
+    }
 });
 
 //post call to register partner on the network
-app.post('/api/registerPartner', function(req, res) {
+app.post('/api/registerPartner', async function (req, res) {
+    try {
+        const { name, partnerid, cardid } = req.body;
 
-    //declare variables to retrieve from request
-    let name = req.body.name;
-    let partnerId = req.body.partnerid;
-    let cardId = req.body.cardid;
+        const validation = validate.validatePartnerRegistration(
+            cardid,
+            partnerid,
+            name
+        );
 
-    //print variables
-    console.log('Using param - name: ' + name + ' partnerId: ' + partnerId + ' cardId: ' + cardId);
+        if (validation.error) {
+            res.statusMessage = validation.error;
+            return res.sendStatus(400);
+        }
 
-    //validate partner registration fields
-    validate.validatePartnerRegistration(cardId, partnerId, name)
-        .then((response) => {
-            //return error if error in response
-            if (typeof response === 'object' && 'error' in response && response.error !== null) {
-                res.json({
-                    error: response.error
-                });
-                return;
-            } else {
-                //else register partner on the network
-                network.registerPartner(cardId, partnerId, name)
-                    .then((response) => {
-                        //return error if error in response
-                        if (typeof response === 'object' && 'error' in response && response.error !== null) {
-                            res.json({
-                                error: response.error
-                            });
-                        } else {
-                            //else return success
-                            res.json({
-                                success: response
-                            });
-                        }
-                    });
-            }
-        });
+        const response = await network.registerPartner(cardid, partnerid, name);
+        if (response.error) {
+            res.statusMessage = response.error;
+            return res.sendStatus(400);
+        }
 
+        res.sendStatus(201);
+    } catch (error) {
+        res.sendStatus(500);
+    }
 });
 
 //post call to perform EarnPoints transaction on the network
-app.post('/api/earnPoints', function(req, res) {
+app.post('/api/earnPoints', async function (req, res) {
+    try {
+        const { accountnumber, cardid, partnerid } = req.body;
+        //declare variables to retrieve from request
+        const points = parseFloat(req.body.points);
 
-    //declare variables to retrieve from request
-    let accountNumber = req.body.accountnumber;
-    let cardId = req.body.cardid;
-    let partnerId = req.body.partnerid;
-    let points = parseFloat(req.body.points);
+        const checkPoints = await validate.validatePoints(points);
+        if (checkPoints.error) {
+            res.statusMessage = checkPoints.error;
+            return res.sendStatus(400);
+        }
 
-    //print variables
-    console.log('Using param - points: ' + points + ' partnerId: ' + partnerId + ' accountNumber: ' + accountNumber + ' cardId: ' + cardId);
+        const response = await network.earnPointsTransaction(
+            cardid,
+            accountnumber,
+            partnerid,
+            checkPoints
+        );
 
-    //validate points field
-    validate.validatePoints(points)
-        .then((checkPoints) => {
-            //return error if error in response
-            if (typeof checkPoints === 'object' && 'error' in checkPoints && checkPoints.error !== null) {
-                res.json({
-                    error: checkPoints.error
-                });
-                return;
-            } else {
-                points = checkPoints;
-                //else perforn EarnPoints transaction on the network
-                network.earnPointsTransaction(cardId, accountNumber, partnerId, points)
-                    .then((response) => {
-                        //return error if error in response
-                        if (typeof response === 'object' && 'error' in response && response.error !== null) {
-                            res.json({
-                                error: response.error
-                            });
-                        } else {
-                            //else return success
-                            res.json({
-                                success: response
-                            });
-                        }
-                    });
-            }
-        });
-
+        if (response.error) {
+            res.statusMessage = response.error;
+            return res.sendStatus(400);
+        }
+        res.sendStatus(200);
+    } catch (error) {
+        res.sendStatus(500);
+    }
 });
 
 //post call to perform UsePoints transaction on the network
-app.post('/api/usePoints', function(req, res) {
+app.post('/api/usePoints', async function (req, res) {
+    try {
+        const { accountnumber, cardid, partnerid } = req.body;
+        const points = parseFloat(req.body.points);
 
-    //declare variables to retrieve from request
-    let accountNumber = req.body.accountnumber;
-    let cardId = req.body.cardid;
-    let partnerId = req.body.partnerid;
-    let points = parseFloat(req.body.points);
+        const checkPoints = await validate.validatePoints(points);
+        if (checkPoints.error) {
+            res.statusMessage = checkPoints.error;
+            return res.sendStatus(400);
+        }
 
-    //print variables
-    console.log('Using param - points: ' + points + ' partnerId: ' + partnerId + ' accountNumber: ' + accountNumber + ' cardId: ' + cardId);
+        const response = await network.usePointsTransaction(
+            cardid,
+            accountnumber,
+            partnerid,
+            checkPoints
+        );
 
-    //validate points field
-    validate.validatePoints(points)
-    //return error if error in response
-        .then((checkPoints) => {
-            if (typeof checkPoints === 'object' && 'error' in checkPoints && checkPoints.error !== null) {
-                res.json({
-                    error: checkPoints.error
-                });
-                return;
-            } else {
-                points = checkPoints;
-                //else perforn UsePoints transaction on the network
-                network.usePointsTransaction(cardId, accountNumber, partnerId, points)
-                    .then((response) => {
-                        //return error if error in response
-                        if (typeof response === 'object' && 'error' in response && response.error !== null) {
-                            res.json({
-                                error: response.error
-                            });
-                        } else {
-                            //else return success
-                            res.json({
-                                success: response
-                            });
-                        }
-                    });
-            }
-        });
-
-
+        if (response.error) {
+            res.statusMessage = response.error;
+            return res.sendStatus(400);
+        }
+        res.sendStatus(200);
+    } catch (error) {
+        res.sendStatus(500);
+    }
 });
 
 //post call to retrieve member data, transactions data and partners to perform transactions with from the network
-app.post('/api/memberData', function(req, res) {
+app.post('/api/memberData', async function (req, res) {
+    try {
+        const { accountnumber, cardid } = req.body;
+        //declare variables to retrieve from request
 
-    //declare variables to retrieve from request
-    let accountNumber = req.body.accountnumber;
-    let cardId = req.body.cardid;
+        const returnData = {};
 
-    //print variables
-    console.log('memberData using param - ' + ' accountNumber: ' + accountNumber + ' cardId: ' + cardId);
+        const [
+            member,
+            usePointsResults,
+            earnPointsResults,
+            partnersInfo,
+        ] = await Promise.all([
+            network.memberData(cardid, accountnumber),
+            network.usePointsTransactionsInfo(cardid, 'member', accountnumber),
+            network.earnPointsTransactionsInfo(cardid, 'member', accountnumber),
+            network.allPartnersInfo(cardid),
+        ]);
 
-    //declare return object
-    let returnData = {};
+        if (
+            member.error ||
+            usePointsResults.error ||
+            earnPointsResults.error ||
+            partnersInfo.error
+        ) {
+            res.statusMessage =
+                member.error ||
+                usePointsResults.error ||
+                earnPointsResults.error ||
+                partnersInfo.error;
+            return res.sendStatus(400);
+        }
 
-    //get member data from network
-    network.memberData(cardId, accountNumber)
-        .then((member) => {
-            //return error if error in response
-            if (typeof member === 'object' && 'error' in member && member.error !== null) {
-                res.json({
-                    error: member.error
-                });
-            } else {
-                //else add member data to return object
-                returnData.accountNumber = member.accountNumber;
-                returnData.firstName = member.firstName;
-                returnData.lastName = member.lastName;
-                returnData.phoneNumber = member.phoneNumber;
-                returnData.email = member.email;
-                returnData.points = member.points;
-            }
+        returnData.accountNumber = member.accountNumber;
+        returnData.firstName = member.firstName;
+        returnData.lastName = member.lastName;
+        returnData.phoneNumber = member.phoneNumber;
+        returnData.email = member.email;
+        returnData.points = member.points;
+        returnData.usePointsResults = usePointsResults;
+        returnData.earnPointsResult = earnPointsResults;
+        returnData.partnersData = partnersInfo;
 
-        })
-        .then(() => {
-            //get UsePoints transactions from the network
-            network.usePointsTransactionsInfo(cardId, 'member', accountNumber)
-                .then((usePointsResults) => {
-                    //return error if error in response
-                    if (typeof usePointsResults === 'object' && 'error' in usePointsResults && usePointsResults.error !== null) {
-                        res.json({
-                            error: usePointsResults.error
-                        });
-                    } else {
-                        //else add transaction data to return object
-                        returnData.usePointsResults = usePointsResults;
-                    }
-
-                }).then(() => {
-                    //get EarnPoints transactions from the network
-                    network.earnPointsTransactionsInfo(cardId, 'member', accountNumber)
-                        .then((earnPointsResults) => {
-                            //return error if error in response
-                            if (typeof earnPointsResults === 'object' && 'error' in earnPointsResults && earnPointsResults.error !== null) {
-                                res.json({
-                                    error: earnPointsResults.error
-                                });
-                            } else {
-                                //else add transaction data to return object
-                                returnData.earnPointsResult = earnPointsResults;
-                            }
-
-                        })
-                        .then(() => {
-                            //get partners to transact with from the network
-                            network.allPartnersInfo(cardId)
-                                .then((partnersInfo) => {
-                                    //return error if error in response
-                                    if (typeof partnersInfo === 'object' && 'error' in partnersInfo && partnersInfo.error !== null) {
-                                        res.json({
-                                            error: partnersInfo.error
-                                        });
-                                    } else {
-                                        //else add partners data to return object
-                                        returnData.partnersData = partnersInfo;
-                                    }
-
-                                    //return returnData
-                                    res.json(returnData);
-
-                                });
-                        });
-                });
-        });
-
+        res.json(returnData);
+    } catch (error) {
+        res.sendStatus(500);
+    }
 });
 
 //post call to retrieve partner data and transactions data from the network
-app.post('/api/partnerData', function(req, res) {
-
+app.post('/api/partnerData', async function (req, res) {
     //declare variables to retrieve from request
-    let partnerId = req.body.partnerid;
-    let cardId = req.body.cardid;
+    try {
+        const { partnerid, cardid } = req.body;
 
-    //print variables
-    console.log('partnerData using param - ' + ' partnerId: ' + partnerId + ' cardId: ' + cardId);
+        const returnData = {};
 
-    //declare return object
-    let returnData = {};
+        const [
+            partner,
+            usePointsResults,
+            earnPointsResults,
+        ] = await Promise.all([
+            network.partnerData(cardid, partnerid),
+            network.usePointsTransactionsInfo(cardid, 'partner', partnerid),
+            network.earnPointsTransactionsInfo(cardid, 'partner', partnerid),
+        ]);
 
-    //get partner data from network
-    network.partnerData(cardId, partnerId)
-        .then((partner) => {
-            //return error if error in response
-            if (typeof partner === 'object' && 'error' in partner && partner.error !== null) {
-                res.json({
-                    error: partner.error
-                });
-            } else {
-                //else add partner data to return object
-                returnData.id = partner.id;
-                returnData.name = partner.name;
-            }
+        if (
+            partner.error ||
+            usePointsResults.error ||
+            earnPointsResults.error
+        ) {
+            res.statusMessage =
+                partner.error ||
+                usePointsResults.error ||
+                earnPointsResults.error;
+            return res.sendStatus(400);
+        }
 
-        })
-        .then(() => {
-            //get UsePoints transactions from the network
-            network.usePointsTransactionsInfo(cardId, 'partner', partnerId)
-                .then((usePointsResults) => {
-                    //return error if error in response
-                    if (typeof usePointsResults === 'object' && 'error' in usePointsResults && usePointsResults.error !== null) {
-                        res.json({
-                            error: usePointsResults.error
-                        });
-                    } else {
-                        //else add transaction data to return object
-                        returnData.usePointsResults = usePointsResults;
-                        //add total points collected by partner to return object
-                        returnData.pointsCollected = analysis.totalPointsCollected(usePointsResults);
-                    }
-
-                })
-                .then(() => {
-                    //get EarnPoints transactions from the network
-                    network.earnPointsTransactionsInfo(cardId, 'partner', partnerId)
-                        .then((earnPointsResults) => {
-                            //return error if error in response
-                            if (typeof earnPointsResults === 'object' && 'error' in earnPointsResults && earnPointsResults.error !== null) {
-                                res.json({
-                                    error: earnPointsResults.error
-                                });
-                            } else {
-                                //else add transaction data to return object
-                                returnData.earnPointsResults = earnPointsResults;
-                                //add total points given by partner to return object
-                                returnData.pointsGiven = analysis.totalPointsGiven(earnPointsResults);
-                            }
-
-                            //return returnData
-                            res.json(returnData);
-
-                        });
-                });
-        });
-
+        returnData.id = partner.id;
+        returnData.name = partner.name;
+        returnData.usePointsResults = usePointsResults;
+        //add total points collected by partner to return object
+        returnData.pointsCollected = analysis.totalPointsCollected(
+            usePointsResults
+        );
+        returnData.earnPointsResults = earnPointsResults;
+        //add total points given by partner to return object
+        returnData.pointsGiven = analysis.totalPointsGiven(earnPointsResults);
+        res.json(returnData);
+    } catch (error) {
+        res.sendStatus(500);
+    }
 });
 
 //declare port
-let port = process.env.PORT || 8000;
-if (process.env.VCAP_APPLICATION) {
-    port = process.env.PORT;
-}
+const port = process.env.PORT || 8000;
 
 //run app on port
-app.listen(port, function() {
+app.listen(port, function () {
     console.log('app running on port: %d', port);
 });
