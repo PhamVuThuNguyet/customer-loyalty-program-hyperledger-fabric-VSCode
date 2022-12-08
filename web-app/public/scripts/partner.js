@@ -13,6 +13,10 @@ async function updatePartner() {
         const { data } = await axios.post('/api/partners/data', inputData);
         localStorage.setItem('token', data.token);
         document.getElementById('loader').style.display = 'none';
+
+        document.querySelector('#login-button').style.display = 'none';
+        document.querySelector('#logout-button').style.display = 'block';
+
         $('.heading').html(function () {
             let str = '<h2><b> ' + data.name + ' </b></h2>';
             str = str + '<h2><b> ' + data.id + ' </b></h2>';
@@ -23,16 +27,30 @@ async function updatePartner() {
         //update dashboard
         $('.dashboards').html(function () {
             let str = '';
-            str =
-                str +
-                '<h5>Total points allocated to customers: ' +
-                data.pointsGiven +
-                ' </h5>';
-            str =
-                str +
-                '<h5>Total points redeemed by customers: ' +
-                data.pointsCollected +
-                ' </h5>';
+            str += `
+                <div class="col-md-4">
+                    <div class="card text-white bg-primary mb-3">
+                        <div class="card-header">Total points allocated</div>
+                        <div class="card-body">
+                            <h5 class="card-title">${data.pointsGiven}</h5>
+                            <p class="card-text">
+                                Points given to customer by purchasing
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-white bg-success mb-3">
+                        <div class="card-header">Total points redeemed</div>
+                        <div class="card-body">
+                            <h5 class="card-title">${data.pointsCollected}</h5>
+                            <p class="card-text">
+                                Points redeemed by customer
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
             return str;
         });
 
@@ -120,3 +138,9 @@ const checkLogin = async () => {
 };
 
 checkLogin();
+
+$('#logout-button > a').on('click', (e) => {
+    e.preventDefault();
+    localStorage.removeItem('token');
+    window.location.replace('/');
+});
