@@ -112,6 +112,7 @@ class PartnerController {
             });
             res.json(returnData);
         } catch (error) {
+            console.log(error);
             res.sendStatus(500);
         }
     }
