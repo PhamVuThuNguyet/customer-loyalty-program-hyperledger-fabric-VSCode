@@ -1,3 +1,8 @@
+/**
+ * VKU_NPC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 'use strict';
 
 //check user input and call server to create dataset
