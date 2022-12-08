@@ -4,16 +4,13 @@
  *
  */
 
- body {
-    height: 100vh;
-}
-
 #loginSection {
-    height: 100%;
+    height: 100vh;
     background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
 }
 
-#loginSection .card {
+#loginSection .card,
+#infoSection {
     color: rgb(84, 84, 84);
     background: rgba(255, 255, 255, 0.25);
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
@@ -46,4 +43,8 @@
 
 #loginSection .card input:focus {
     background: rgba(255, 255, 255);
+}
+
+#headSection {
+    background-image: linear-gradient(to right, #fa709a 0%, #fee140 100%);
 }
