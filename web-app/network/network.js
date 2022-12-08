@@ -94,7 +94,7 @@ async function getContract() {
         return contract;
     } catch (err) {
         let error = {};
-        error.error = err.message;
+        error.error = 'User is not existed';
         return error;
     }
 }
@@ -215,7 +215,7 @@ module.exports = {
             return true;
         } catch (err) {
             let error = {};
-            error.error = err.message;
+            error.error = 'User is not existed';
             return error;
         }
     },
@@ -240,7 +240,7 @@ module.exports = {
             return true;
         } catch (err) {
             let error = {};
-            error.error = err.message;
+            error.error = 'User is not existed';
             return error;
         }
     },
@@ -266,7 +266,7 @@ module.exports = {
             return member;
         } catch (err) {
             let error = {};
-            error.error = err.message;
+            error.error = 'User is not existed';
             return error;
         }
     },
@@ -289,7 +289,7 @@ module.exports = {
             return partner;
         } catch (err) {
             let error = {};
-            error.error = err.message;
+            error.error = 'User is not existed';
             return error;
         }
     },
@@ -325,7 +325,7 @@ module.exports = {
             return earnPointsTransactions;
         } catch (err) {
             let error = {};
-            error.error = err.message;
+            error.error = 'User is not existed';
             return error;
         }
 
