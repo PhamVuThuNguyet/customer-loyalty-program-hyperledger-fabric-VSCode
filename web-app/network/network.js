@@ -102,7 +102,18 @@ async function getContract() {
 
 //export module
 module.exports = {
+    /** Initledger */
+    initLedger: async function () {
+        let contract = await getContract();
 
+        try {
+            await contract.submitTransaction('instantiate');
+        } catch (err) {
+            let error = {}
+            error.error = err.message;
+            return error;
+        }
+    },
     /*
   * Create Member participant and import card for identity
   * @param {String} cardId Import card id for member
