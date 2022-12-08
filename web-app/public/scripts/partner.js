@@ -257,7 +257,7 @@ async function updatePartner() {
         document.getElementById('transactionSection').style.display = 'block';
     } catch (error) {
         document.getElementById('loader').style.display = 'none';
-        alert('error');
+        toast('error', 'Update Partner failed.');
     }
 }
 
@@ -298,7 +298,7 @@ async function earnPoints(points) {
     const partnerid = $('.partner-id input').val();
 
     if (!accountnumber) {
-        alert('Enter client id first');
+        toast('error', "Enter client id first");
         return;
     }
 
@@ -319,10 +319,10 @@ async function earnPoints(points) {
         document.getElementById('loader').style.display = 'none';
 
         await updatePartner();
-        alert('Transaction successful');
+        toast("success", "Transaction successful");
     } catch (error) {
         document.getElementById('loader').style.display = 'none';
-        alert(error.response.statusText);
+        toast("error", error.response.statusText);
     }
 }
 
@@ -330,7 +330,7 @@ async function earnPoints(points) {
 $('.earn-points-transaction').click(async function () {
     const clientid = $('#client').val();
     if (!clientid) {
-        alert('Please enter client ID');
+        toast("error", "Please enter client ID");
     }
 
     const partnerid = $('.partner-id input').val();
@@ -346,7 +346,7 @@ $('.earn-points-transaction').click(async function () {
     if (totalPoint > 0) {
         earnPoints(totalPoint);
     } else {
-        alert('Please choose product to buy');
+        toast("error", "Please choose product to buy");
     }
 });
 
@@ -358,7 +358,7 @@ async function usePoints(points) {
     const partnerid = $('.partner-id input').val();
 
     if (!accountnumber) {
-        alert('Enter client id first');
+        toast("error", "Enter client id first");
         return;
     }
 
@@ -377,18 +377,18 @@ async function usePoints(points) {
             },
         });
         await updatePartner();
-        alert('Transaction successful');
+        toast("success", "Transaction successful");
         document.getElementById('loader').style.display = 'none';
     } catch (error) {
         document.getElementById('loader').style.display = 'none';
-        alert(error.response.statusText);
+        toast("error", error.response.statusText);
     }
 }
 
 $('.use-points-transaction').click(async function () {
     const clientid = $('#client').val();
     if (!clientid) {
-        alert('Please enter client ID');
+        toast("error", "Please enter client ID first");
     }
 
     const partnerid = $('.partner-id input').val();
@@ -406,6 +406,6 @@ $('.use-points-transaction').click(async function () {
     if (totalPoint > 0) {
         usePoints(totalPoint);
     } else {
-        alert('Please choose product to buy');
+        toast("error", "Plese choose product to buy");
     }
 });
