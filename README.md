@@ -146,10 +146,13 @@ npm start
 <h3>To run this tool, you must have Postgresql on your system. Follow <a href="https://www.cybertec-postgresql.com/en/postgresql-on-wsl2-for-windows-install-and-setup/">this link</a> to setup postgresql on Linux (or WSL)</h3>
 
 <h3>Run postgresql</h3>
+
 ```bash
 sudo service postgresql start
 ```
+
 <h3>Make sure you have run postgresql and the test-network before do this</h3>
+
 ```bash
 cd explorer
 cp -rf ../test-network/organizations/ .
@@ -159,9 +162,12 @@ export FABRIC_CRYPTO_PATH=./organizations
 ```
 
 <h3>Now let's run the blockchain explorer</h3>
+
 ```bash
 docker-compose up -d
 ```
+You can login with account: exploreradmin (password: exploreradminpw)
+
 You can login with account: exploreradmin (password: exploreradminpw)
 
 If you want to stop it, run:
@@ -291,6 +297,142 @@ You should be able to manage channels, Using 2.0 lifecycle to install, approve, 
 #### couchdb credentials (for console)
 * URL - http://127.0.0.1:5985/_utils/
 * Login - admin/password
+
+## Integrate Fabric Operations Console
+
+The console provides the following high level function:
+
+- Ability to import and manage all Hyperledger Fabric Components from a single web console, no matter where they are located.
+- Maintain complete control over identities, channels, and smart contracts.
+- Join Peers to Channels and view channel membership as well as individual transactions and channel details.
+- Register, view, delete, and re-enroll CA Users.
+- View Ordering cluster and node information as well as view and modify consortium and channel membership.
+- View and modify channel capabilities and ordering service parameters.
+- Install and Instantiate chaincode. Supports both 1.x and 2.x Lifecycle.
+- View, Create, Import and Export Organizations and Identities.
+- Role Based Access Control in UI to tightly control which Console users can perform which operations.
+
+The console relies on [GRPC web](https://grpc.io/docs/platforms/web/) to allow GRPC based communication with Orderers and Peers via Node.js. Management of Certificate Authorities is done via REST API and does not require a GRPC Web Instance.
+
+For more Information see the [documentation for the current IBM production offerings](https://cloud.ibm.com/docs/blockchain-sw-252?topic=blockchain-sw-252-ibp-console-govern) which are driven by the code in this Lab proposal.
+
+### High level architecture
+
+<img src = "https://raw.githubusercontent.com/hyperledger-labs/fabric-operations-console/main/docs/images/architecture_hl.png"/>
+
+### Running Fabric Operations Console
+
+You can use the following steps to provision a network using Fabric test-network, add grpc-web proxy on that of that and import components into Console so that you can manage the test network.
+
+#### Prerequisites
+
+- zip
+- jq
+- docker
+- docker-compose (V2)
+- _[WSL2](https://docs.microsoft.com/en-us/windows/wsl/install-win10) (Windows only)_
+
+#### Setup
+
+Clone console repo into root folder(customer-loyalty-program-hyperledger-fabric-vscode)
+
+`git clone https://github.com/hyperledger-labs/fabric-operations-console`
+
+`cd fabric-operations-console`
+
+<h3>Please make sure that you have already up the test-network before go to the next steps</h3>
+
+#### Bring up console
+
+- In fabric-operations-console\docker\docker-compose-grpc-web.yaml file, change all volume paths from ../fabric-samples/test-network/... to ../../test-network/...
+- Then run:
+  `./scripts/setupConsole.sh up`
+
+#### Create zip file
+
+Run the following command to create a zip of the console JSONs to match the network setup above
+
+`./scripts/createAssets.sh`
+
+#### Console setup
+
+- Open browser to URL http://localhost:3000/
+- Login with admin/password
+- Change password
+
+##### Import components into console
+
+- Switch to "Settings" page
+- Click "Import"
+- Select zip file ./workarea/console_assets.zip
+
+##### Create Identities
+
+- Switch to Nodes page and perform the following steps
+
+###### ordererca
+
+- Select CA "ordererca-local"
+- Associate Identity
+- Enter admin/adminpw for enroll id and secret
+- Select the overflow menu (3 dots) against "ordererAdmin"
+- Select "Enroll identity"
+- Enter "ordererAdminpw" for Enroll secret
+- Next
+- Enter identity display name as "OrdererMSP Admin"
+- Click "Add Identity to wallet"
+
+###### org1ca
+
+- Select CA "org1ca-local"
+- Associate Identity
+- Enter admin/adminpw for enroll id and secret
+- Select the overflow menu (3 dots) against "org1admin"
+- Select "Enroll identity"
+- Enter "org1adminpw" for Enroll secret
+- Next
+- Enter identity display name as "Org1MSP Admin"
+- Click "Add Identity to wallet"
+
+###### org2ca
+
+- Select CA "org2ca-local"
+- Associate Identity
+- Enter admin/adminpw for enroll id and secret
+- Select the overflow menu (3 dots) against "org2admin"
+- Select "Enroll identity"
+- Enter "org2adminpw" for Enroll secret
+- Next
+- Enter identity display name as "Org2MSP Admin"
+- Click "Add Identity to wallet"
+
+##### Associate Identity
+
+- Switch to Nodes page and perform the following steps
+- Select peer "org1_peer1 - local"
+- Associate Identity
+- Select "Org1MSP Admin"
+
+- Select peer "org2_peer1 - local"
+- Associate Identity
+- Select "Org2MSP Admin"
+
+- Select orderer "orderer_local"
+- Associate Identity
+- Select "OrdererMSP Admin"
+
+#### Enjoy!
+
+You should be able to manage channels, Using 2.0 lifecycle to install, approve, commit smart contracts following the guide
+
+#### Bring down network
+
+`./scripts/setupConsole.sh down`
+
+#### couchdb credentials (for console)
+
+- URL - http://127.0.0.1:5985/_utils/
+- Login - admin/password
 
 ## Links
 
