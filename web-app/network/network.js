@@ -256,7 +256,17 @@ module.exports = {
   * @param {String} cardId Card id to connect to network
   */
     allPartnersInfo: async function (cardId) {
+        let contract = await getContract();
 
+        try {
+            let allPartners = await contract.evaluateTransaction('GetState', 'all-partners');
+            allPartners = JSON.parse(utf8Decoder.decode(allPartners));
+            return allPartners;
+        } catch (err) {
+            let error = {};
+            error.error = err.message;
+            return error;
+        }
     },
 
     /*
@@ -264,7 +274,17 @@ module.exports = {
   * @param {String} cardId Card id to connect to network
   */
     earnPointsTransactionsInfo: async function (cardId, userType, userId) {
+        let contract = await getContract();
 
+        try {
+            let earnPointsTransactions = await contract.evaluateTransaction('EarnPointsTransactionsInfo', userType, userId);
+            earnPointsTransactions = JSON.parse(utf8Decoder.decode(earnPointsTransactions));
+            return earnPointsTransactions;
+        } catch (err) {
+            let error = {};
+            error.error = err.message;
+            return error;
+        }
 
     },
 
@@ -273,7 +293,17 @@ module.exports = {
   * @param {String} cardId Card id to connect to network
   */
     usePointsTransactionsInfo: async function (cardId, userType, userId) {
+        let contract = await getContract();
 
+        try {
+            let usePointsTransactions = await contract.evaluateTransaction('UsePointsTransactionsInfo', userType, userId);
+            usePointsTransactions = JSON.parse(utf8Decoder.decode(usePointsTransactions));
+            return usePointsTransactions;
+        } catch (err) {
+            let error = {};
+            error.error = err.message;
+            return error;
+        }
 
     }
 
