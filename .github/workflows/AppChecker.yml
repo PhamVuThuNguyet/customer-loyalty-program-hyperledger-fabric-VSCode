@@ -56,3 +56,8 @@ jobs:
           sudo chmod +rwx stop.sh
           sudo chmod -R a+rwx test-network
           ./start.sh
+
+      - name: Run test
+        run: |
+          cd web-app
+          npm run test

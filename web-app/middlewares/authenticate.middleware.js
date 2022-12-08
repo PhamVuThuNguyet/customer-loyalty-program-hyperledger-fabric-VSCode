@@ -8,6 +8,13 @@
 
 const { decodeToken } = require('../utils/jwt.util');
 
+/**
+ * @notice Authenticate user
+ * @param {*} req Request from client
+ * @param {*} res Response to client
+ * @param {*} next Next function
+ * @returns 401 if not authenticate
+ */
 const authenticateUser = (req, res, next) => {
     const token =
         req.headers.authorization &&

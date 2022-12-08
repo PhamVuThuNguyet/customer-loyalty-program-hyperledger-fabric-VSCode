@@ -12,16 +12,25 @@ const analysis = require('../network/analysis.js');
 const { generateToken } = require('../utils/jwt.util');
 
 class PartnerController {
+    /**
+     * @dev [POST] /api/partner/register
+     * @notice API to create new partner
+     * @param {*} req Request from client
+     * @param {*} res Response to client
+     * @returns status 201 if successful, 400 if error in validation, 409 if conflict, 500 for other errors
+     */
     async register(req, res) {
         try {
             const { name, cardid } = req.body;
-            const partnerid = 'P' + req.body.partnerid;
+            let partnerid = req.body.partnerid;
 
-            const validation = validate.validatePartnerRegistration(
+            const validation = await validate.validatePartnerRegistration(
                 cardid,
                 partnerid,
                 name
             );
+
+            partnerid = 'P' + partnerid;
 
             if (validation.error) {
                 res.statusMessage = validation.error;
@@ -40,11 +49,17 @@ class PartnerController {
 
             res.sendStatus(201);
         } catch (error) {
-            console.log('error', error);
             res.sendStatus(500);
         }
     }
 
+    /**
+     * @dev [POST] /api/partners/data
+     * @notice API for login and get partner data
+     * @param {*} req Request from client
+     * @param {*} res Response to client
+     * @returns status 200 if successful, 400 if error in validation, 500 for other errors
+     */
     async data(req, res) {
         try {
             const { cardid } = req.body;
@@ -97,7 +112,6 @@ class PartnerController {
             });
             res.json(returnData);
         } catch (error) {
-            console.log(error);
             res.sendStatus(500);
         }
     }
