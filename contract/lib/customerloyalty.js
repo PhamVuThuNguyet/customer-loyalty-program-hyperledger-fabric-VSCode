@@ -11,10 +11,13 @@ class CustomerLoyalty extends Contract {
     async instantiate(ctx) {
         console.info('============= START : Initialize Ledger ===========');
 
-        await ctx.stub.putState('instantiate', Buffer.from('INIT-LEDGER'));
-        await ctx.stub.putState(allPartnersKey, Buffer.from(JSON.stringify([])));
-        await ctx.stub.putState(earnPointsTransactionsKey, Buffer.from(JSON.stringify([])));
-        await ctx.stub.putState(usePointsTransactionsKey, Buffer.from(JSON.stringify([])));
+        let data = await ctx.stub.getState('instantiate');
+        if (data.toString() !== 'INIT-LEDGER') {
+            await ctx.stub.putState('instantiate', Buffer.from('INIT-LEDGER'));
+            await ctx.stub.putState(allPartnersKey, Buffer.from(JSON.stringify([])));
+            await ctx.stub.putState(earnPointsTransactionsKey, Buffer.from(JSON.stringify([])));
+            await ctx.stub.putState(usePointsTransactionsKey, Buffer.from(JSON.stringify([])));
+        }
 
         console.info('============= END : Initialize Ledger ===========');
     }
@@ -45,7 +48,7 @@ class CustomerLoyalty extends Contract {
     // Record a transaction where a member earns points
     async EarnPoints(ctx, earnPoints) {
         earnPoints = JSON.parse(earnPoints);
-        earnPoints.timestamp = new Date((ctx.stub.txTimestamp.seconds.low*1000)).toGMTString();
+        earnPoints.timestamp = new Date((ctx.stub.txTimestamp.seconds.low * 1000)).toGMTString();
         earnPoints.transactionId = ctx.stub.txId;
 
         let member = await ctx.stub.getState(earnPoints.member);
@@ -64,7 +67,7 @@ class CustomerLoyalty extends Contract {
     // Record a transaction where a member redeems points
     async UsePoints(ctx, usePoints) {
         usePoints = JSON.parse(usePoints);
-        usePoints.timestamp = new Date((ctx.stub.txTimestamp.seconds.low*1000)).toGMTString();
+        usePoints.timestamp = new Date((ctx.stub.txTimestamp.seconds.low * 1000)).toGMTString();
         usePoints.transactionId = ctx.stub.txId;
 
         let member = await ctx.stub.getState(usePoints.member);
