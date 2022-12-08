@@ -8,6 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
   <link rel="stylesheet" href="stylesheets/style.css">
+  <link rel="stylesheet" href="stylesheets/register.css">
 </head>
 
 <body class="bg-light">
@@ -42,15 +43,15 @@
 
   <div class="jumbotron">
     <div class="container">
-      <h1>Member Registration</h1>
-      <p id="registration-info" style="display:block;">Complete the form below to register as member on the network</p>
+      <h1 class="form-title text-center font-weight-bold text-primary">Member Registration</h1>
+      <p id="registration-info" class="text-center" style="display:block;">Complete the form below to register as member on the network</p>
     </div>
   </div>
 
 
   <div class="container" id="registration" style="display:block;">
 
-    <div class="col-md-6 order-md-1">
+    <div class="col-md-6 mx-auto order-md-1 p-3 register-form">
       <div class="mb-3">
         <label for="account-number"><b>Account Number </b><span class="text-muted"> (identification on the network)</span></label>
         <div class="input-group account-number">
@@ -90,7 +91,7 @@
       </div>
 
       <div class="row">
-        <div class="col-md-8 mb-3 email">
+        <div class="col-md-12 mb-3 email">
           <label for="email"><b>Email</b></label>
           <input type="text" class="form-control" id="email" placeholder="you@example.com" value="" required>
           <div class="invalid-feedback">
@@ -101,7 +102,7 @@
       </div>
 
       <div class="row">
-        <div class="col-md-6 mb-3 phone-number">
+        <div class="col-md-12 mb-3 phone-number">
           <label for="phone-number"><b>Phone Number</b></label>
           <input type="text" class="form-control" id="phone-number" placeholder="555-555-5555" value="" required>
           <div class="invalid-feedback">
@@ -117,7 +118,7 @@
         </div-->
 
         <hr class="mb-4">
-        <button class="btn btn-primary btn-lg btn-block register-member" type="submit">Register</button>
+        <button class="btn btn-outline-primary btn-lg btn-block register-member" type="submit">Register</button>
       </div>
 
     </div>

@@ -6,7 +6,8 @@
   <title>Customer Loyalty Program</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+    integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
   <link rel="stylesheet" href="stylesheets/style.css">
 </head>
 
@@ -14,9 +15,10 @@
 
   <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
     <a class="navbar-brand" href="/home">Customer Loyalty Program</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+      aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
       <ul class="navbar-nav mr-auto">
@@ -29,7 +31,8 @@
         </li>
 
         <li class="nav-item text-nowrap dropdown">
-          <a class="nav-link dropdown-toggle " href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sign-in</a>
+          <a class="nav-link dropdown-toggle " href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">Sign-in</a>
           <div class="dropdown-menu" aria-labelledby="dropdown01">
             <a class="dropdown-item" href="/member">Member</a>
             <a class="dropdown-item" href="/partner">Partner</a>
@@ -95,13 +98,16 @@
 
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item tab-width">
-            <a class="nav-link active" id="earn-tab" data-toggle="tab" href="#earn" role="tab" aria-controls="earn" aria-selected="true">Earn Points</a>
+            <a class="nav-link active" id="earn-tab" data-toggle="tab" href="#earn" role="tab" aria-controls="earn"
+              aria-selected="true">Earn Points</a>
           </li>
           <li class="nav-item tab-width">
-            <a class="nav-link" id="redeem-tab" data-toggle="tab" href="#redeem" role="tab" aria-controls="redeem" aria-selected="false">Redeem Points</a>
+            <a class="nav-link" id="redeem-tab" data-toggle="tab" href="#redeem" role="tab" aria-controls="redeem"
+              aria-selected="false">Redeem Points</a>
           </li>
           <li class="nav-item tab-width">
-            <a class="nav-link" id="transactions-tab" data-toggle="tab" href="#transactions" role="tab" aria-controls="transactions" aria-selected="false">Transactions</a>
+            <a class="nav-link" id="transactions-tab" data-toggle="tab" href="#transactions" role="tab"
+              aria-controls="transactions" aria-selected="false">Transactions</a>
           </li>
         </ul>
       </div>
@@ -117,8 +123,8 @@
               <div class="earn-partner">
                 <p>
                   <select class="form-control">
-                                        <option disabled="" selected="" value="disabled">Loading...</option>
-                                    </select>
+                    <option disabled="" selected="" value="disabled">Loading...</option>
+                  </select>
                 </p>
               </div>
             </div>
@@ -129,12 +135,14 @@
             <p>
               <button class="btn btn-primary earn-points-30">Purchase Item X for $20 and earn 30 points </button> <br />
               <button class="btn btn-primary earn-points-80">Purchase Item Y for $50 and earn 80 points </button> <br />
-              <button class="btn btn-primary earn-points-200">Purchase Item Z for $100 and earn 200 points </button> <br />
+              <button class="btn btn-primary earn-points-200">Purchase Item Z for $100 and earn 200 points </button>
+              <br />
             </p>
 
             <br>
             <p><b> Purchase Item for specific price </b><br />
-              <b> $1 = 1 points </b></p>
+              <b> $1 = 1 points </b>
+            </p>
 
             <div class="earnPoints">
               <p> Enter price item
@@ -157,8 +165,8 @@
               <div class="use-partner">
                 <p>
                   <select class="form-control">
-                                            <option disabled="" selected="" value="disabled">Loading...</option>
-                                        </select>
+                    <option disabled="" selected="" value="disabled">Loading...</option>
+                  </select>
                 </p>
               </div>
             </div>
@@ -174,17 +182,17 @@
 
             <br>
             <p><b> Get item for specific points </b>
-              <p>
+            <p>
 
-                <div class="usePoints">
-                  <p> Enter points value of specific item
-                    <input>
-                  </p>
-                </div>
+            <div class="usePoints">
+              <p> Enter points value of specific item
+                <input>
+              </p>
+            </div>
 
-                <button class="btn btn-secondary use-points-transaction">Get item and redeem points</button>
+            <button class="btn btn-secondary use-points-transaction">Get item and redeem points</button>
 
-                <hr class="featurette-divider">
+            <hr class="featurette-divider">
 
           </div>
 
@@ -194,15 +202,18 @@
             <br>
             <ul class="nav nav-tabs" id="transactionsTypeTab" role="tablist">
               <li class="nav-item ">
-                <a class="nav-link active" id="points-allocated-tab" data-toggle="tab" href="#points-allocated" role="tab" aria-controls="points-allocated" aria-selected="true">Points Allocated</a>
+                <a class="nav-link active" id="points-allocated-tab" data-toggle="tab" href="#points-allocated"
+                  role="tab" aria-controls="points-allocated" aria-selected="true">Points Allocated</a>
               </li>
               <li class="nav-item ">
-                <a class="nav-link" id="points-redeemed-tab" data-toggle="tab" href="#points-redeemed" role="tab" aria-controls="points-redeemed" aria-selected="false">Points Redeemed</a>
+                <a class="nav-link" id="points-redeemed-tab" data-toggle="tab" href="#points-redeemed" role="tab"
+                  aria-controls="points-redeemed" aria-selected="false">Points Redeemed</a>
               </li>
             </ul>
 
             <div class="tab-content" id="myTabContent">
-              <div class="tab-pane fade show active" id="points-allocated" role="tabpanel" aria-labelledby="points-allocated-tab">
+              <div class="tab-pane fade show active" id="points-allocated" role="tabpanel"
+                aria-labelledby="points-allocated-tab">
                 <br>
                 <h4>Points Earned Transactions</h4>
                 <br>
@@ -243,6 +254,8 @@
 
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+  integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+  integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
 <script src="/scripts/member.js"></script>
