@@ -213,9 +213,26 @@ $('.earn-partner select').on('change', async function () {
 });
 
 //check user input and call server
-$('.earn-points-transaction').click(function () {
-    let formPoints = $('.earnPoints input').val();
-    earnPoints(formPoints);
+$('.earn-points-transaction').click(async function () {
+    const partnerid = $('.earn-partner select').find(':selected').attr('partner-id');
+
+    if (!partnerid) {
+        return;
+    }
+
+    let productData = await axios.get('/api/products/partner/' + partnerid);
+    productData = productData.data;
+    let totalPoint = 0;
+    for (let i = 0; i < productData.length; i++) {
+        if ($('#' + productData[i]._id).is(':checked')) {
+            totalPoint += parseInt(productData[i].price);
+        }
+    }
+    if (totalPoint > 0) {
+        earnPoints(totalPoint);
+    } else {
+        alert('Please choose product to buy');
+    }
 });
 
 async function usePoints(points) {
@@ -320,9 +337,28 @@ $('.use-partner select').on('change', async function () {
 
 
 //check user input and call server
-$('.use-points-transaction').click(function () {
-    const formPoints = $('.usePoints input').val();
-    usePoints(formPoints);
+$('.use-points-transaction').click(async function () {
+    const partnerid = $('.use-partner select')
+        .find(':selected')
+        .attr('partner-id');
+    if (!partnerid) {
+        return;
+    }
+
+    let productData = await axios.get('/api/products/partner/' + partnerid);
+
+    productData = productData.data;
+    let totalPoint = 0;
+    for (let i = 0; i < productData.length; i++) {
+        if ($('#' + productData[i]._id).is(':checked')) {
+            totalPoint += parseInt(productData[i].price);
+        }
+    }
+    if (totalPoint > 0) {
+        usePoints(totalPoint);
+    } else {
+        alert('Please choose product to get');
+    }
 });
 
 async function checkLogin() {
