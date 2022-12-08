@@ -93,3 +93,11 @@ body {
         opacity: 1;
     }
 }
+
+.nav-tabs {
+    width: 100%;
+}
+
+.nav-tabs .nav-item {
+    flex: 1;
+}
