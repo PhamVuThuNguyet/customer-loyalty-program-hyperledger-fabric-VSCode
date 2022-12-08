@@ -102,7 +102,7 @@ class MemberController {
                 cardid,
                 accountnumber,
                 partnerid,
-                checkPoints
+                checkPoints * 10
             );
 
             if (response.error) {
