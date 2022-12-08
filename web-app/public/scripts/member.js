@@ -4,7 +4,6 @@ async function updateMember() {
     try {
         const accountnumber = $('.account-number input').val();
         const cardid = $('.card-id input').val();
-
         const inputData = {
             accountnumber,
             cardid,
@@ -12,6 +11,10 @@ async function updateMember() {
         document.getElementById('loader').style.display = 'flex';
         const { data } = await axios.post('/api/members/data', inputData);
         localStorage.setItem('token', data.token);
+
+        document.querySelector('#login-button').style.display = 'none';
+        document.querySelector('#logout-button').style.display = 'block';
+        
         document.getElementById('loader').style.display = 'none';
         $('.heading').html(function () {
             let str =
@@ -388,3 +391,9 @@ async function checkLogin() {
 }
 
 checkLogin();
+
+$('#logout-button > a').on('click', (e) => {
+    e.preventDefault();
+    localStorage.removeItem('token');
+    window.location.replace('/');
+});
