@@ -40,6 +40,7 @@ class PartnerController {
 
             res.sendStatus(201);
         } catch (error) {
+            console.log('error', error);
             res.sendStatus(500);
         }
     }
@@ -96,6 +97,7 @@ class PartnerController {
             });
             res.json(returnData);
         } catch (error) {
+            console.log(error);
             res.sendStatus(500);
         }
     }

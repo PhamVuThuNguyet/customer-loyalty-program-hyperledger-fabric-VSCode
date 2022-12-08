@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  *
  */
+
 'use strict';
 
 //get the libraries to call
@@ -21,7 +22,7 @@ class MemberController {
                 phonenumber,
             } = req.body;
 
-            const accountnumber = 'P' + req.body.accountnumber;
+            const accountnumber = 'M' + req.body.accountnumber;
 
             const validation = await validate.validateMemberRegistration(
                 cardid,
@@ -115,7 +116,7 @@ class MemberController {
     async data(req, res) {
         try {
             const { cardid } = req.body;
-            const accountnumber = 'P' + req.body.accountnumber;
+            const accountnumber = 'M' + req.body.accountnumber;
 
             const returnData = {};
 

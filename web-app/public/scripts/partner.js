@@ -1,7 +1,6 @@
 'use strict';
 
-//check user input and call server
-$('.sign-in-partner').click(async function () {
+async function updatePartner() {
     try {
         const partnerid = $('.partner-id input').val();
         const cardid = $('.card-id input').val();
@@ -89,6 +88,35 @@ $('.sign-in-partner').click(async function () {
         document.getElementById('transactionSection').style.display = 'block';
     } catch (error) {
         document.getElementById('loader').style.display = 'none';
-        alert(error.response.statusText|| 'An error has occurred!');
+        alert(error.response.statusText || 'An error has occurred!');
     }
-});
+}
+
+//check user input and call server
+$('.sign-in-partner').click(() => updatePartner());
+
+const checkLogin = async () => {
+    try {
+        const token = localStorage.getItem('token');
+        if (token) {
+            const { data: user } = await axios.get('/api/user-info', {
+                headers: {
+                    Authorization: 'Bearer ' + token,
+                },
+            });
+            if (user.role === 'partner') {
+                $('.partner-id input').val(user.id);
+                $('.card-id input').val(user.cardId);
+                await updatePartner();
+            } else {
+                location.replace('/member');
+            }
+        }
+        document.querySelector('body').style.display = 'block';
+    } catch (error) {
+        document.querySelector('body').style.display = 'block';
+        localStorage.removeItem('token');
+    }
+};
+
+checkLogin();

@@ -27,7 +27,7 @@ $('.register-member').click(async function () {
         document.getElementById('registration-info').style.display = 'none';
     } catch (error) {
         document.getElementById('loader').style.display = 'none';
-        alert(error.response.statusText);
+        alert(error.response.statusText || 'An error has occurred!');
     }
 });
 
@@ -55,6 +55,6 @@ $('.register-partner').click(async function () {
     } catch (error) {
         document.getElementById('loader').style.display = 'none';
         document.getElementById('registration').style.display = 'block';
-        alert(error.response.statusText);
+        alert(error.response.statusText || 'An error has occurred!');
     }
 });
