@@ -111,7 +111,7 @@ async function updateMember() {
         document.getElementById('transactionSection').style.display = 'block';
     } catch (error) {
         document.getElementById('loader').style.display = 'none';
-        alert(error.response.statusText || 'An error has occurred!');
+        toast("error", error.response.statusText || 'An error has occurred!');
     }
 }
 
@@ -128,7 +128,7 @@ async function earnPoints(points) {
             .find(':selected')
             .attr('partner-id');
         if (!partnerid) {
-            alert('Select partner first');
+            toast("error", "Select partner first");
             return;
         }
 
@@ -151,13 +151,13 @@ async function earnPoints(points) {
             },
         });
         updateMember();
-        alert('Transaction successful');
+        toast("success", "Transaction successful");
         document.getElementById('loader').style.display = 'none';
         document.getElementById('infoSection').style.display = 'block';
     } catch (error) {
         document.getElementById('loader').style.display = 'none';
         document.getElementById('infoSection').style.display = 'block';
-        alert(error.response.statusText || 'An error has occurred!');
+        toast("error", error.response.statusText || 'An error has occurred!');
     }
 }
 
@@ -237,7 +237,7 @@ $('.earn-points-transaction').click(async function () {
     if (totalPoint > 0) {
         earnPoints(totalPoint);
     } else {
-        alert('Please choose product to buy');
+        toast("error", 'Please choose product to buy');
     }
 });
 
@@ -250,7 +250,7 @@ async function usePoints(points) {
             .attr('partner-id');
 
         if (!partnerid) {
-            alert('Select partner first');
+            toast("error", 'Select partner first');
             return;
         }
 
@@ -275,11 +275,11 @@ async function usePoints(points) {
         document.getElementById('loader').style.display = 'none';
         document.getElementById('infoSection').style.display = 'block';
         updateMember();
-        alert('Transaction successful');
+        toast("success", 'Transaction successful');
     } catch (error) {
         document.getElementById('loader').style.display = 'none';
         document.getElementById('infoSection').style.display = 'block';
-        alert(error.response.statusText || 'An error has occurred!');
+        toast("error", error.response.statusText || 'An error has occurred!');
     }
 }
 
@@ -371,7 +371,7 @@ $('.use-points-transaction').click(async function () {
     if (totalPoint > 0) {
         usePoints(totalPoint);
     } else {
-        alert('Please choose product to get');
+        toast('error', 'Please choose product to get')
     }
 });
 
@@ -399,7 +399,7 @@ async function checkLogin() {
             }
         } catch (error) {
             localStorage.removeItem('token');
-            alert('Your session is expired');
+            toast("error", 'Your session is expired');
             document.querySelector('body').display = 'block';
         }
     } else {
