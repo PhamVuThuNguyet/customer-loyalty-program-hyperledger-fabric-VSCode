@@ -1,3 +1,8 @@
+/**
+ * VKU_NPC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 'use strict';
 
 import { toast } from './toast.js';
@@ -158,7 +163,9 @@ async function earnPoints(points) {
 
 $('.earn-partner select').on('change', async function () {
     //update items
-    const partnerid = $('.earn-partner select').find(':selected').attr('partner-id');
+    const partnerid = $('.earn-partner select')
+        .find(':selected')
+        .attr('partner-id');
 
     if (!partnerid) {
         return;
@@ -207,12 +214,13 @@ $('.earn-partner select').on('change', async function () {
             $('#purchase-btn').prop('disabled', true);
         }
     });
-
 });
 
 //check user input and call server
 $('.earn-points-transaction').click(async function () {
-    const partnerid = $('.earn-partner select').find(':selected').attr('partner-id');
+    const partnerid = $('.earn-partner select')
+        .find(':selected')
+        .attr('partner-id');
 
     if (!partnerid) {
         return;
@@ -295,9 +303,13 @@ $('.use-partner select').on('change', async function () {
 
         for (let i = 0; i < productData.length; i++) {
             str += `<div class="item col-md-4 mb-3">
-                        <label class="product-label" for="${productData[i]._id}">
+                        <label class="product-label" for="${
+                            productData[i]._id
+                        }">
                             <div class="card card-${productData[i]._id}">
-                                <img class="group list-group-image" src="${productData[i].image}" alt="" />
+                                <img class="group list-group-image" src="${
+                                    productData[i].image
+                                }" alt="" />
                                 <div class="card-header">
                                     <h5 class="card-title">
                                         ${productData[i].name}
@@ -307,7 +319,13 @@ $('.use-partner select').on('change', async function () {
                                     <h5 class="point-text card-text font-weight-bold">
                                         Points: ${productData[i].price * 10}
                                     </h5>
-                                    <input class="product-checkbox-redeem" data-id="${productData[i]._id}" type="checkbox" id="${productData[i]._id}" name="${productData[i].name}" value="${productData[i].price}" hidden/>
+                                    <input class="product-checkbox-redeem" data-id="${
+                                        productData[i]._id
+                                    }" type="checkbox" id="${
+                productData[i]._id
+            }" name="${productData[i].name}" value="${
+                productData[i].price
+            }" hidden/>
                                 </div>
                             </div>
                         </label>
@@ -330,9 +348,7 @@ $('.use-partner select').on('change', async function () {
             $('#redeem-btn').prop('disabled', true);
         }
     });
-
 });
-
 
 //check user input and call server
 $('.use-points-transaction').click(async function () {

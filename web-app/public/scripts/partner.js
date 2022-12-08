@@ -1,3 +1,8 @@
+/**
+ * VKU_NPC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 'use strict';
 
 import { toast } from './toast.js';

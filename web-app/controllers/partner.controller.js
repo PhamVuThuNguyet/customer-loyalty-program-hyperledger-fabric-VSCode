@@ -1,7 +1,6 @@
 /**
  * VKU_NPC
  * SPDX-License-Identifier: Apache-2.0
- *
  */
 'use strict';
 
@@ -112,6 +111,7 @@ class PartnerController {
             });
             res.json(returnData);
         } catch (error) {
+            console.log(error);
             res.sendStatus(500);
         }
     }
