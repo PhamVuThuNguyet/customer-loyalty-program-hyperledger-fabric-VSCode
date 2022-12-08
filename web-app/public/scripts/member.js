@@ -57,48 +57,42 @@ async function updateMember() {
         });
 
         //update earn points transaction
-        $('.points-allocated-transactions').html(function () {
+        $('.points-allocated-transactions table tbody').html(function () {
             let str = '';
             let transactionData = data.earnPointsResult;
 
             for (let i = 0; i < transactionData.length; i++) {
-                str =
-                    str +
-                    '<p>timeStamp: ' +
-                    transactionData[i].timestamp +
-                    '<br />partner: ' +
-                    transactionData[i].partner +
-                    '<br />member: ' +
-                    transactionData[i].member +
-                    '<br />points: ' +
-                    transactionData[i].points +
-                    '<br />transactionID: ' +
-                    transactionData[i].transactionId +
-                    '</p><br>';
+                str += `
+                    <tr>
+                        <th scope="row"></th>
+                        <td>${transactionData[i].timestamp}</td>
+                        <td>${transactionData[i].partner}</td>
+                        <td>${transactionData[i].member}</td>
+                        <td>${transactionData[i].points}</td>
+                        <td>${transactionData[i].transactionId}</td>
+                    </tr>
+                    `;
             }
             return str;
         });
 
         //update use points transaction
-        $('.points-redeemed-transactions').html(function () {
+        $('.points-redeemed-transactions table tbody').html(function () {
             let str = '';
 
             let transactionData = data.usePointsResults;
 
             for (let i = 0; i < transactionData.length; i++) {
-                str =
-                    str +
-                    '<p>timeStamp: ' +
-                    transactionData[i].timestamp +
-                    '<br />partner: ' +
-                    transactionData[i].partner +
-                    '<br />member: ' +
-                    transactionData[i].member +
-                    '<br />points: ' +
-                    transactionData[i].points +
-                    '<br />transactionID: ' +
-                    transactionData[i].transactionId +
-                    '</p><br>';
+                str += `
+                    <tr>
+                        <th scope="row"></th>
+                        <td>${transactionData[i].timestamp}</td>
+                        <td>${transactionData[i].partner}</td>
+                        <td>${transactionData[i].member}</td>
+                        <td>${transactionData[i].points}</td>
+                        <td>${transactionData[i].transactionId}</td>
+                    </tr>
+                    `;
             }
             return str;
         });
