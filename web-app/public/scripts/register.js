@@ -1,113 +1,60 @@
 'use strict';
 
-let apiUrl = location.protocol + '//' + location.host + '/api/';
-
-console.log('at register.js');
-
 //check user input and call server to create dataset
-$('.register-member').click(function() {
+$('.register-member').click(async function () {
+    try {
+        const accountnumber = $('.account-number input').val();
+        const cardid = $('.card-id input').val();
+        const firstname = $('.first-name input').val();
+        const lastname = $('.last-name input').val();
+        const email = $('.email input').val();
+        const phonenumber = $('.phone-number input').val();
 
-    //get user input data
-    let formAccountNum = $('.account-number input').val();
-    let formCardId = $('.card-id input').val();
-    let formFirstName = $('.first-name input').val();
-    let formLastName = $('.last-name input').val();
-    let formEmail = $('.email input').val();
-    let formPhoneNumber = $('.phone-number input').val();
-
-    //create json data
-    let inputData = '{' + '"firstname" : "' + formFirstName + '", ' + '"lastname" : "' + formLastName + '", ' + '"email" : "' + formEmail + '", ' + '"phonenumber" : "' + formPhoneNumber + '", ' + '"accountnumber" : "' + formAccountNum + '", ' + '"cardid" : "' + formCardId + '"}';
-    console.log(inputData);
-
-    //make ajax call to add the dataset
-    $.ajax({
-        type: 'POST',
-        url: apiUrl + 'registerMember',
-        data: inputData,
-        dataType: 'json',
-        contentType: 'application/json',
-        beforeSend: function() {
-            //display loading
-            document.getElementById('registration').style.display = 'none';
-            document.getElementById('loader').style.display = 'block';
-        },
-        success: function(data) {
-
-            //remove loader
-            document.getElementById('loader').style.display = 'none';
-
-            //check data for error
-            if (data.error) {
-                document.getElementById('registration').style.display = 'block';
-                alert(data.error);
-                return;
-            } else {
-                //notify successful registration
-                document.getElementById('successful-registration').style.display = 'block';
-                document.getElementById('registration-info').style.display = 'none';
-            }
-
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            //reload on error
-            alert('Error: Try again');
-            console.log(errorThrown);
-            console.log(textStatus);
-            console.log(jqXHR);
-        }
-    });
-
+        const inputData = {
+            accountnumber,
+            cardid,
+            firstname,
+            lastname,
+            email,
+            phonenumber,
+        };
+        document.getElementById('registration').style.display = 'none';
+        document.getElementById('loader').style.display = 'block';
+        axios.post('/api/members/register', inputData);
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('successful-registration').style.display =
+            'block';
+        document.getElementById('registration-info').style.display = 'none';
+    } catch (error) {
+        document.getElementById('loader').style.display = 'none';
+        alert(error.response.statusText);
+    }
 });
 
-
 //check user input and call server to create dataset
-$('.register-partner').click(function() {
-
+$('.register-partner').click(async function () {
     //get user input data
-    let formName = $('.name input').val();
-    let formPartnerId = $('.partner-id input').val();
-    let formCardId = $('.card-id input').val();
+    const name = $('.name input').val();
+    const partnerid = $('.partner-id input').val();
+    const cardid = $('.card-id input').val();
 
-    //create json data
-    let inputData = '{' + '"name" : "' + formName + '", ' + '"partnerid" : "' + formPartnerId + '", ' + '"cardid" : "' + formCardId + '"}';
-    console.log(inputData);
+    const data = {
+        name,
+        partnerid,
+        cardid,
+    };
 
-    //make ajax call to add the dataset
-    $.ajax({
-        type: 'POST',
-        url: apiUrl + 'registerPartner',
-        data: inputData,
-        dataType: 'json',
-        contentType: 'application/json',
-        beforeSend: function() {
-            //display loading
-            document.getElementById('registration').style.display = 'none';
-            document.getElementById('loader').style.display = 'block';
-        },
-        success: function(data) {
-
-            //remove loader
-            document.getElementById('loader').style.display = 'none';
-
-            //check data for error
-            if (data.error) {
-                document.getElementById('registration').style.display = 'block';
-                alert(data.error);
-                return;
-            } else {
-                //notify successful registration
-                document.getElementById('successful-registration').style.display = 'block';
-                document.getElementById('registration-info').style.display = 'none';
-            }
-
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            //reload on error
-            alert('Error: Try again');
-            console.log(errorThrown);
-            console.log(textStatus);
-            console.log(jqXHR);
-        }
-    });
-
+    try {
+        document.getElementById('registration').style.display = 'none';
+        document.getElementById('loader').style.display = 'block';
+        await axios.post('/api/partners/register', data);
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('successful-registration').style.display =
+            'block';
+        document.getElementById('registration-info').style.display = 'none';
+    } catch (error) {
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('registration').style.display = 'block';
+        alert(error.response.statusText);
+    }
 });
