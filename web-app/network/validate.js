@@ -2,9 +2,12 @@
 
 //stackoverflow
 function isInt(value) {
-    return !isNaN(value) && (function(x) {
-        return (x | 0) === x;
-    })(parseFloat(value));
+    return (
+        !isNaN(value) &&
+        (function (x) {
+            return (x | 0) === x;
+        })(parseFloat(value))
+    );
 }
 
 //stackoverflow
@@ -20,18 +23,23 @@ function validatePhoneNumber(phoneNumber) {
 }
 
 module.exports = {
-
     /*
-  * Validata member registration fields ensuring the fields meet the criteria
-  * @param {String} cardId
-  * @param {String} accountNumber
-  * @param {String} firstName
-  * @param {String} lastName
-  * @param {String} phoneNumber
-  * @param {String} email
-  */
-    validateMemberRegistration: async function(cardId, accountNumber, firstName, lastName, email, phoneNumber) {
-
+     * Validata member registration fields ensuring the fields meet the criteria
+     * @param {String} cardId
+     * @param {String} accountNumber
+     * @param {String} firstName
+     * @param {String} lastName
+     * @param {String} phoneNumber
+     * @param {String} email
+     */
+    validateMemberRegistration: async function (
+        cardId,
+        accountNumber,
+        firstName,
+        lastName,
+        email,
+        phoneNumber
+    ) {
         let response = {};
 
         //verify input otherwise return error with an informative message
@@ -91,17 +99,15 @@ module.exports = {
             console.log('Valid Entries');
             return response;
         }
-
     },
 
     /*
-  * Validata partner registration fields ensuring the fields meet the criteria
-  * @param {String} cardId
-  * @param {String} partnerId
-  * @param {String} name
-  */
-    validatePartnerRegistration: async function(cardId, partnerId, name) {
-
+     * Validata partner registration fields ensuring the fields meet the criteria
+     * @param {String} cardId
+     * @param {String} partnerId
+     * @param {String} name
+     */
+    validatePartnerRegistration: async function (cardId, partnerId, name) {
         let response = {};
 
         //verify input otherwise return error with an informative message
@@ -133,11 +139,9 @@ module.exports = {
             console.log('Valid Entries');
             return response;
         }
-
     },
 
-    validatePoints: async function(points) {
-
+    validatePoints: async function (points) {
         let response = {};
         //verify input otherwise return error with an informative message
         if (isNaN(points)) {
@@ -147,7 +151,24 @@ module.exports = {
         } else {
             return Math.round(points);
         }
+    },
 
-    }
+    validateProduct: async function ({ name, price, image, partnerId }) {
+        const response = {};
 
+        if (String(partnerId).length < 1) {
+            response.error = 'Enter partner id';
+            return response;
+        } else if (name.length < 1) {
+            response.error = 'Enter product name';
+            return response;
+        } else if (isNaN(price)) {
+            response.error = 'Price must be number';
+            return response;
+        } else if (image.length < 1) {
+            response.error = 'Enter image url';
+            return response;
+        }
+        return response;
+    },
 };
