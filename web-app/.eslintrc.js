@@ -1,4 +1,5 @@
-/*
+/**
+ * VKU_NPC
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -8,13 +9,13 @@ module.exports = {
         browser: true,
         mocha: true,
         jquery: true,
-        es6: true
+        es6: true,
     },
     parserOptions: {
         ecmaVersion: 8,
-        sourceType: 'script'
+        sourceType: 'script',
     },
-    extends: "eslint:recommended",
+    extends: 'eslint:recommended',
     rules: {
         indent: ['error', 4],
         quotes: ['error', 'single'],
@@ -34,6 +35,6 @@ module.exports = {
         'no-with': 'error',
         'operator-linebreak': 'error',
         yoda: 'error',
-        'quote-props': ['error', 'as-needed']
-    }
+        'quote-props': ['error', 'as-needed'],
+    },
 };

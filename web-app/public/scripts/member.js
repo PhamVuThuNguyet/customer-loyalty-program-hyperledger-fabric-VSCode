@@ -1,259 +1,433 @@
+/**
+ * VKU_NPC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 'use strict';
 
-let apiUrl = location.protocol + '//' + location.host + '/api/';
+import { toast } from './toast.js';
 
-function updateMember() {
+const selectedPartnerId = '';
 
-    //get user input data
-    let formAccountNum = $('.account-number input').val();
-    let formCardId = $('.card-id input').val();
+function toggleLogoutButton() {
+    const token = localStorage.getItem('token');
+    if (token) {
+        $('#logout-button').css({ display: 'block' });
+        $('#login-button').css({ display: 'none' });
+    } else {
+        $('#logout-button').css({ display: 'none' });
+        $('#login-button').css({ display: 'block' });
+    }
+}
 
-    //create json data
-    let inputData = '{' + '"accountnumber" : "' + formAccountNum + '", ' + '"cardid" : "' + formCardId + '"}';
-    console.log(inputData);
+async function updateMember() {
+    try {
+        const accountnumber = $('.account-number input').val();
+        const cardid = $('.card-id input').val();
+        const inputData = {
+            accountnumber,
+            cardid,
+        };
+        document.getElementById('loader').style.display = 'flex';
+        const { data } = await axios.post('/api/members/data', inputData);
+        localStorage.setItem('token', data.token);
 
-    //make ajax call
-    $.ajax({
-        type: 'POST',
-        url: apiUrl + 'memberData',
-        data: inputData,
-        dataType: 'json',
-        contentType: 'application/json',
-        beforeSend: function() {
-            //display loading
-            document.getElementById('loader').style.display = 'block';
-        },
-        success: function(data) {
+        toggleLogoutButton();
+        
+        document.getElementById('loader').style.display = 'none';
+        $('.heading').html(function () {
+            let str =
+                '<h2><b>' + data.firstName + ' ' + data.lastName + '</b></h2>';
+            str = str + '<h2><b>' + data.accountNumber + '</b></h2>';
+            str = str + '<h2><b>' + data.points + '</b></h2>';
 
-            //remove loader
-            document.getElementById('loader').style.display = 'none';
+            return str;
+        });
 
-            //check data for error
-            if (data.error) {
-                alert(data.error);
-                return;
-            } else {
-
-                //update heading
-                $('.heading').html(function() {
-                    let str = '<h2><b>' + data.firstName + ' ' + data.lastName + '</b></h2>';
-                    str = str + '<h2><b>' + data.accountNumber + '</b></h2>';
-                    str = str + '<h2><b>' + data.points + '</b></h2>';
-
-                    return str;
-                });
-
-                //update partners dropdown for earn points transaction
-                $('.earn-partner select').html(function() {
-                    let str = '<option value="" disabled="" selected="">select</option>';
-                    let partnersData = data.partnersData;
-                    for (let i = 0; i < partnersData.length; i++) {
-                        str = str + '<option partner-id=' + partnersData[i].id + '> ' + partnersData[i].name + '</option>';
-                    }
-                    return str;
-                });
-
-                //update partners dropdown for use points transaction
-                $('.use-partner select').html(function() {
-                    let str = '<option value="" disabled="" selected="">select</option>';
-                    let partnersData = data.partnersData;
-                    for (let i = 0; i < partnersData.length; i++) {
-                        str = str + '<option partner-id=' + partnersData[i].id + '> ' + partnersData[i].name + '</option>';
-                    }
-                    return str;
-                });
-
-                //update earn points transaction
-                $('.points-allocated-transactions').html(function() {
-                    let str = '';
-                    let transactionData = data.earnPointsResult;
-
-                    for (let i = 0; i < transactionData.length; i++) {
-                        str = str + '<p>timeStamp: ' + transactionData[i].timestamp + '<br />partner: ' + transactionData[i].partner + '<br />member: ' + transactionData[i].member + '<br />points: ' + transactionData[i].points + '<br />transactionID: ' + transactionData[i].transactionId + '</p><br>';
-                    }
-                    return str;
-                });
-
-                //update use points transaction
-                $('.points-redeemed-transactions').html(function() {
-                    let str = '';
-
-                    let transactionData = data.usePointsResults;
-
-                    for (let i = 0; i < transactionData.length; i++) {
-                        str = str + '<p>timeStamp: ' + transactionData[i].timestamp + '<br />partner: ' + transactionData[i].partner + '<br />member: ' + transactionData[i].member + '<br />points: ' + transactionData[i].points + '<br />transactionID: ' + transactionData[i].transactionId + '</p><br>';
-                    }
-                    return str;
-                });
-
-                //remove login section and display member page
-                document.getElementById('loginSection').style.display = 'none';
-                document.getElementById('transactionSection').style.display = 'block';
+        //update partners dropdown for earn points transaction
+        $('.earn-partner select').html(function () {
+            let str =
+                '<option value="" disabled="" selected="">select</option>';
+            let partnersData = data.partnersData;
+            for (let i = 0; i < partnersData.length; i++) {
+                str =
+                    str +
+                    '<option partner-id=' +
+                    partnersData[i].id +
+                    '> ' +
+                    partnersData[i].name +
+                    '</option>';
             }
+            return str;
+        });
 
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            //reload on error
-            alert('Error: Try again');
-            console.log(errorThrown);
-            console.log(textStatus);
-            console.log(jqXHR);
-        },
-        complete: function() {
+        //update partners dropdown for use points transaction
+        $('.use-partner select').html(function () {
+            let str =
+                '<option value="" disabled="" selected="">select</option>';
+            let partnersData = data.partnersData;
+            for (let i = 0; i < partnersData.length; i++) {
+                str =
+                    str +
+                    '<option partner-id=' +
+                    partnersData[i].id +
+                    '> ' +
+                    partnersData[i].name +
+                    '</option>';
+            }
+            return str;
+        });
 
-        }
-    });
+        //update earn points transaction
+        $('.points-allocated-transactions table tbody').html(function () {
+            let str = '';
+            let transactionData = data.earnPointsResult;
+
+            for (let i = 0; i < transactionData.length; i++) {
+                str += `
+                    <tr>
+                        <th scope="row"></th>
+                        <td>${transactionData[i].timestamp}</td>
+                        <td>${transactionData[i].partner}</td>
+                        <td>${transactionData[i].member}</td>
+                        <td>${transactionData[i].points}</td>
+                        <td>${transactionData[i].transactionId}</td>
+                    </tr>
+                    `;
+            }
+            return str;
+        });
+
+        //update use points transaction
+        $('.points-redeemed-transactions table tbody').html(function () {
+            let str = '';
+
+            let transactionData = data.usePointsResults;
+
+            for (let i = 0; i < transactionData.length; i++) {
+                str += `
+                    <tr>
+                        <th scope="row"></th>
+                        <td>${transactionData[i].timestamp}</td>
+                        <td>${transactionData[i].partner}</td>
+                        <td>${transactionData[i].member}</td>
+                        <td>${transactionData[i].points}</td>
+                        <td>${transactionData[i].transactionId}</td>
+                    </tr>
+                    `;
+            }
+            return str;
+        });
+
+        //remove login section and display member page
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('transactionSection').style.display = 'block';
+    } catch (error) {
+        document.getElementById('loader').style.display = 'none';
+        toast("error", error.response.statusText || 'An error has occurred!');
+    }
 }
 
 //check user input and call server
-$('.sign-in-member').click(function() {
+$('.sign-in-member').click(function () {
     updateMember();
 });
 
-function earnPoints(formPoints) {
+async function earnPoints(points) {
+    try {
+        const accountnumber = $('.account-number input').val();
+        const cardid = $('.card-id input').val();
+        const partnerid = $('.earn-partner select')
+            .find(':selected')
+            .attr('partner-id');
+        if (!partnerid) {
+            toast("error", "Select partner first");
+            return;
+        }
 
-    //get user input data
-    let formAccountNum = $('.account-number input').val();
-    let formCardId = $('.card-id input').val();
-    let formPartnerId = $('.earn-partner select').find(':selected').attr('partner-id');
-    if (!formPartnerId) {
-        alert('Select partner first');
+        const inputData = {
+            accountnumber,
+            cardid,
+            partnerid,
+            points,
+        };
+        document.getElementById('loader').style.display = 'flex';
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.replace('/');
+            return;
+        }
+        await axios.post('/api/members/earn-points', inputData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        updateMember();
+        $('.items').html('');
+        toast("success", "Transaction successful");
+        document.getElementById('loader').style.display = 'none';
+    } catch (error) {
+        if (error.response.status === 401 || error.response.status === 403) {
+            alert('Your session has expired!');
+            localStorage.removeItem('token');
+            window.location.replace('/member');
+            return;
+        }
+        document.getElementById('loader').style.display = 'none';
+        toast("error", error.response.statusText || 'An error has occurred!');
+    }
+}
+
+$('.earn-partner select').on('change', async function () {
+    //update items
+    const partnerid = $('.earn-partner select')
+        .find(':selected')
+        .attr('partner-id');
+
+    if (!partnerid) {
         return;
     }
 
-    //create json data
-    let inputData = '{' + '"accountnumber" : "' + formAccountNum + '", ' + '"cardid" : "' + formCardId + '", ' + '"points" : "' + formPoints + '", ' + '"partnerid" : "' + formPartnerId + '"}';
-    console.log(inputData);
+    let productData = await axios.get('api/products/partner/' + partnerid);
 
-    //make ajax call
-    $.ajax({
-        type: 'POST',
-        url: apiUrl + 'earnPoints',
-        data: inputData,
-        dataType: 'json',
-        contentType: 'application/json',
-        beforeSend: function() {
-            //display loading
-            document.getElementById('loader').style.display = 'block';
-            document.getElementById('infoSection').style.display = 'none';
-        },
-        success: function(data) {
+    productData = productData.data;
 
-            document.getElementById('loader').style.display = 'none';
-            document.getElementById('infoSection').style.display = 'block';
+    $('.items').html(function () {
+        let str = '';
+        for (let i = 0; i < productData.length; i++) {
+            str += `<div class="item col-md-4 mb-3">
+                        <label class="product-label" for="${productData[i]._id}">
+                            <div class="card card-${productData[i]._id}">
+                                <img class="group list-group-image" src="${productData[i].image}" alt="" />
+                                <div class="card-header">
+                                    <h5 class="card-title">
+                                        ${productData[i].name}
+                                    </h5>
+                                </div>
+                                <div class="card-body p-3">
+                                    <h5 class="price-text card-text font-weight-bold">
+                                        Price: $${productData[i].price}
+                                    </h5>
+                                    <input class="product-checkbox" data-id="${productData[i]._id}" type="checkbox" id="${productData[i]._id}" name="${productData[i].name}" value="${productData[i].price}" hidden/>
+                                </div>
+                            </div>
+                        </label>
+                    </div>`;
+        }
+        return str;
+    });
 
-            //check data for error
-            if (data.error) {
-                alert(data.error);
-                return;
-            } else {
-                //update member page and notify successful transaction
-                updateMember();
-                alert('Transaction successful');
-            }
-
-
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            alert('Error: Try again');
-            console.log(errorThrown);
-            console.log(textStatus);
-            console.log(jqXHR);
+    $('.product-checkbox').on('change', function () {
+        const productId = $(this).attr('data-id');
+        const isChecked = $(this).prop('checked');
+        if (isChecked) {
+            $(`.card-${productId}`).addClass('active');
+        } else {
+            $(`.card-${productId}`).removeClass('active');
+        }
+        if ($('.items input[type=checkbox]:checked').length > 0) {
+            $('#purchase-btn').prop('disabled', false);
+        } else {
+            $('#purchase-btn').prop('disabled', true);
         }
     });
-
-}
-
-$('.earn-points-30').click(function() {
-    earnPoints(30);
 });
-
-$('.earn-points-80').click(function() {
-    earnPoints(80);
-});
-
-$('.earn-points-200').click(function() {
-    earnPoints(200);
-});
-
 
 //check user input and call server
-$('.earn-points-transaction').click(function() {
+$('.earn-points-transaction').click(async function () {
+    const partnerid = $('.earn-partner select')
+        .find(':selected')
+        .attr('partner-id');
 
-    let formPoints = $('.earnPoints input').val();
-    earnPoints(formPoints);
-});
-
-function usePoints(formPoints) {
-
-    //get user input data
-    let formAccountNum = $('.account-number input').val();
-    let formCardId = $('.card-id input').val();
-    let formPartnerId = $('.use-partner select').find(':selected').attr('partner-id');
-
-    if (!formPartnerId) {
-        alert('Select partner first');
+    if (!partnerid) {
         return;
     }
 
-    //create json data
-    let inputData = '{' + '"accountnumber" : "' + formAccountNum + '", ' + '"cardid" : "' + formCardId + '", ' + '"points" : "' + formPoints + '", ' + '"partnerid" : "' + formPartnerId + '"}';
-    console.log(inputData);
+    let productData = await axios.get('/api/products/partner/' + partnerid);
+    productData = productData.data;
+    let totalPoint = 0;
+    for (let i = 0; i < productData.length; i++) {
+        if ($('#' + productData[i]._id).is(':checked')) {
+            totalPoint += parseInt(productData[i].price);
+        }
+    }
+    if (totalPoint > 0) {
+        earnPoints(totalPoint);
+    } else {
+        toast("error", 'Please choose product to buy');
+    }
+});
 
-    //make ajax call
-    $.ajax({
-        type: 'POST',
-        url: apiUrl + 'usePoints',
-        data: inputData,
-        dataType: 'json',
-        contentType: 'application/json',
-        beforeSend: function() {
-            //display loading
-            document.getElementById('loader').style.display = 'block';
-            document.getElementById('infoSection').style.display = 'none';
-        },
-        success: function(data) {
+async function usePoints(points) {
+    try {
+        const accountnumber = $('.account-number input').val();
+        const cardid = $('.card-id input').val();
+        const partnerid = $('.use-partner select')
+            .find(':selected')
+            .attr('partner-id');
 
-            document.getElementById('loader').style.display = 'none';
-            document.getElementById('infoSection').style.display = 'block';
+        if (!partnerid) {
+            toast("error", 'Select partner first');
+            return;
+        }
 
-            //check data for error
-            if (data.error) {
-                alert(data.error);
-                return;
-            } else {
-                //update member page and notify successful transaction
-                updateMember();
-                alert('Transaction successful');
-            }
-
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            alert('Error: Try again');
-            console.log(errorThrown);
-            console.log(textStatus);
-            console.log(jqXHR);
-        },
-        complete: function() {}
-    });
-
+        const inputData = {
+            accountnumber,
+            cardid,
+            partnerid,
+            points,
+        };
+        document.getElementById('loader').style.display = 'flex';
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.replace('/');
+            return;
+        }
+        await axios.post('/api/members/use-points', inputData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        document.getElementById('loader').style.display = 'none';
+        updateMember();
+        $('.items-redeem').html('');
+        toast("success", 'Transaction successful');
+    } catch (error) {
+        if (error.response.status === 401 || error.response.status === 403) {
+            alert('Your session has expired!');
+            localStorage.removeItem('token');
+            window.location.replace('/member');
+            return;
+        }
+        document.getElementById('loader').style.display = 'none';
+        toast("error", error.response.statusText || 'An error has occurred!');
+    }
 }
 
-$('.use-points-50').click(function() {
-    usePoints(50);
-});
+$('.use-partner select').on('change', async function () {
+    //update items
+    const partnerid = $('.use-partner select')
+        .find(':selected')
+        .attr('partner-id');
+    if (!partnerid) {
+        return;
+    }
+    let productData = await axios.get('/api/products/partner/' + partnerid);
 
-$('.use-points-150').click(function() {
-    usePoints(150);
-});
+    productData = productData.data;
 
-$('.use-points-200').click(function() {
-    usePoints(200);
-});
+    $('.items-redeem').html(function () {
+        let str = '';
 
+        for (let i = 0; i < productData.length; i++) {
+            str += `<div class="item col-md-4 mb-3">
+                        <label class="product-label" for="${
+                            productData[i]._id
+                        }">
+                            <div class="card card-${productData[i]._id}">
+                                <img class="group list-group-image" src="${
+                                    productData[i].image
+                                }" alt="" />
+                                <div class="card-header">
+                                    <h5 class="card-title">
+                                        ${productData[i].name}
+                                    </h5>
+                                </div>
+                                <div class="card-body p-3">
+                                    <h5 class="point-text card-text font-weight-bold">
+                                        Points: ${productData[i].price * 10}
+                                    </h5>
+                                    <input class="product-checkbox-redeem" data-id="${
+                                        productData[i]._id
+                                    }" type="checkbox" id="${
+                productData[i]._id
+            }" name="${productData[i].name}" value="${
+                productData[i].price
+            }" hidden/>
+                                </div>
+                            </div>
+                        </label>
+                    </div>`;
+        }
+        return str;
+    });
+
+    $('.product-checkbox-redeem').on('change', function () {
+        const productId = $(this).attr('data-id');
+        const isChecked = $(this).prop('checked');
+        if (isChecked) {
+            $(`.card-${productId}`).addClass('active');
+        } else {
+            $(`.card-${productId}`).removeClass('active');
+        }
+        if ($('.items-redeem input[type=checkbox]:checked').length > 0) {
+            $('#redeem-btn').prop('disabled', false);
+        } else {
+            $('#redeem-btn').prop('disabled', true);
+        }
+    });
+});
 
 //check user input and call server
-$('.use-points-transaction').click(function() {
-    let formPoints = $('.usePoints input').val();
-    usePoints(formPoints);
+$('.use-points-transaction').click(async function () {
+    const partnerid = $('.use-partner select')
+        .find(':selected')
+        .attr('partner-id');
+    if (!partnerid) {
+        return;
+    }
+
+    let productData = await axios.get('/api/products/partner/' + partnerid);
+
+    productData = productData.data;
+    let totalPoint = 0;
+    for (let i = 0; i < productData.length; i++) {
+        if ($('#' + productData[i]._id).is(':checked')) {
+            totalPoint += parseInt(productData[i].price);
+        }
+    }
+    if (totalPoint > 0) {
+        usePoints(totalPoint);
+    } else {
+        toast('error', 'Please choose product to get')
+    }
+});
+
+async function checkLogin() {
+    const token = localStorage.getItem('token');
+
+    if (token) {
+        try {
+            const { data } = await axios.get(
+                '/api/user-info',
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            if (data.role === 'member') {
+                $('.account-number input').val(data.id);
+                $('.card-id input').val(data.cardid);
+                await updateMember();
+                document.querySelector('body').style.display = 'block';
+            } else {
+                window.location.replace('/partner');
+            }
+        } catch (error) {
+            localStorage.removeItem('token');
+            toast("error", 'Your session is expired');
+            document.querySelector('body').display = 'block';
+        }
+    } else {
+        document.querySelector('body').style.display = 'block';
+    }
+}
+
+checkLogin();
+
+$('#logout-button > a').on('click', (e) => {
+    e.preventDefault();
+    localStorage.removeItem('token');
+    window.location.replace('/');
 });

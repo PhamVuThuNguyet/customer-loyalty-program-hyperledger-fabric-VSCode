@@ -1,3 +1,8 @@
+/**
+ * VKU_NPC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 'use strict';
 
 const { Contract } = require('fabric-contract-api');
@@ -6,15 +11,26 @@ const earnPointsTransactionsKey = 'earn-points-transactions';
 const usePointsTransactionsKey = 'use-points-transactions';
 
 class CustomerLoyalty extends Contract {
-
     // Init function executed when the ledger is instantiated
     async instantiate(ctx) {
         console.info('============= START : Initialize Ledger ===========');
 
-        await ctx.stub.putState('instantiate', Buffer.from('INIT-LEDGER'));
-        await ctx.stub.putState(allPartnersKey, Buffer.from(JSON.stringify([])));
-        await ctx.stub.putState(earnPointsTransactionsKey, Buffer.from(JSON.stringify([])));
-        await ctx.stub.putState(usePointsTransactionsKey, Buffer.from(JSON.stringify([])));
+        let data = await ctx.stub.getState('instantiate');
+        if (data.toString() !== 'INIT-LEDGER') {
+            await ctx.stub.putState('instantiate', Buffer.from('INIT-LEDGER'));
+            await ctx.stub.putState(
+                allPartnersKey,
+                Buffer.from(JSON.stringify([]))
+            );
+            await ctx.stub.putState(
+                earnPointsTransactionsKey,
+                Buffer.from(JSON.stringify([]))
+            );
+            await ctx.stub.putState(
+                usePointsTransactionsKey,
+                Buffer.from(JSON.stringify([]))
+            );
+        }
 
         console.info('============= END : Initialize Ledger ===========');
     }
@@ -23,7 +39,10 @@ class CustomerLoyalty extends Contract {
     async CreateMember(ctx, member) {
         member = JSON.parse(member);
 
-        await ctx.stub.putState(member.accountNumber, Buffer.from(JSON.stringify(member)));
+        await ctx.stub.putState(
+            member.accountNumber,
+            Buffer.from(JSON.stringify(member))
+        );
 
         return JSON.stringify(member);
     }
@@ -32,12 +51,18 @@ class CustomerLoyalty extends Contract {
     async CreatePartner(ctx, partner) {
         partner = JSON.parse(partner);
 
-        await ctx.stub.putState(partner.id, Buffer.from(JSON.stringify(partner)));
+        await ctx.stub.putState(
+            partner.id,
+            Buffer.from(JSON.stringify(partner))
+        );
 
         let allPartners = await ctx.stub.getState(allPartnersKey);
         allPartners = JSON.parse(allPartners);
         allPartners.push(partner);
-        await ctx.stub.putState(allPartnersKey, Buffer.from(JSON.stringify(allPartners)));
+        await ctx.stub.putState(
+            allPartnersKey,
+            Buffer.from(JSON.stringify(allPartners))
+        );
 
         return JSON.stringify(partner);
     }
@@ -45,18 +70,28 @@ class CustomerLoyalty extends Contract {
     // Record a transaction where a member earns points
     async EarnPoints(ctx, earnPoints) {
         earnPoints = JSON.parse(earnPoints);
-        earnPoints.timestamp = new Date((ctx.stub.txTimestamp.seconds.low*1000)).toGMTString();
+        earnPoints.timestamp = new Date(
+            ctx.stub.txTimestamp.seconds.low * 1000
+        ).toGMTString();
         earnPoints.transactionId = ctx.stub.txId;
 
         let member = await ctx.stub.getState(earnPoints.member);
         member = JSON.parse(member);
         member.points += earnPoints.points;
-        await ctx.stub.putState(earnPoints.member, Buffer.from(JSON.stringify(member)));
+        await ctx.stub.putState(
+            earnPoints.member,
+            Buffer.from(JSON.stringify(member))
+        );
 
-        let earnPointsTransactions = await ctx.stub.getState(earnPointsTransactionsKey);
+        let earnPointsTransactions = await ctx.stub.getState(
+            earnPointsTransactionsKey
+        );
         earnPointsTransactions = JSON.parse(earnPointsTransactions);
         earnPointsTransactions.push(earnPoints);
-        await ctx.stub.putState(earnPointsTransactionsKey, Buffer.from(JSON.stringify(earnPointsTransactions)));
+        await ctx.stub.putState(
+            earnPointsTransactionsKey,
+            Buffer.from(JSON.stringify(earnPointsTransactions))
+        );
 
         return JSON.stringify(earnPoints);
     }
@@ -64,7 +99,9 @@ class CustomerLoyalty extends Contract {
     // Record a transaction where a member redeems points
     async UsePoints(ctx, usePoints) {
         usePoints = JSON.parse(usePoints);
-        usePoints.timestamp = new Date((ctx.stub.txTimestamp.seconds.low*1000)).toGMTString();
+        usePoints.timestamp = new Date(
+            ctx.stub.txTimestamp.seconds.low * 1000
+        ).toGMTString();
         usePoints.transactionId = ctx.stub.txId;
 
         let member = await ctx.stub.getState(usePoints.member);
@@ -73,12 +110,20 @@ class CustomerLoyalty extends Contract {
             throw new Error('Member does not have sufficient points');
         }
         member.points -= usePoints.points;
-        await ctx.stub.putState(usePoints.member, Buffer.from(JSON.stringify(member)));
+        await ctx.stub.putState(
+            usePoints.member,
+            Buffer.from(JSON.stringify(member))
+        );
 
-        let usePointsTransactions = await ctx.stub.getState(usePointsTransactionsKey);
+        let usePointsTransactions = await ctx.stub.getState(
+            usePointsTransactionsKey
+        );
         usePointsTransactions = JSON.parse(usePointsTransactions);
         usePointsTransactions.push(usePoints);
-        await ctx.stub.putState(usePointsTransactionsKey, Buffer.from(JSON.stringify(usePointsTransactions)));
+        await ctx.stub.putState(
+            usePointsTransactionsKey,
+            Buffer.from(JSON.stringify(usePointsTransactions))
+        );
 
         return JSON.stringify(usePoints);
     }
@@ -132,7 +177,6 @@ class CustomerLoyalty extends Contract {
         let jsonData = JSON.parse(data.toString());
         return JSON.stringify(jsonData);
     }
-
 }
 
 module.exports = CustomerLoyalty;

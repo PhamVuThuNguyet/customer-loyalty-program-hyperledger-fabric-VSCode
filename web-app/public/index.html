@@ -1,3 +1,8 @@
+<!-- 
+  VKU_NPC
+  SPDX-License-Identifier: Apache-2.0
+-->
+
 <!doctype html>
 <html>
 
@@ -7,7 +12,10 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
   <link rel="stylesheet" href="stylesheets/style.css">
+  <link rel="stylesheet" href="stylesheets/index.css">
+  <link rel="stylesheet" href="stylesheets/base.css">
 </head>
 
 
@@ -24,6 +32,13 @@
       </ul>
 
       <ul class="navbar-nav px-3">
+        <li>
+          <a class="nav-link" target="_blank" href="http://localhost:8080/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-upc-scan" viewBox="0 0 16 16">
+              <path d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1h-3zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5zM.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5zM3 4.5a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7zm2 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7zm2 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7zm2 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-7zm3 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7z"/>
+            </svg>
+            Chaincode Explorer</a>
+        </li>
         <li class="nav-item text-nowrap">
           <a class="nav-link" href="/about">About</a>
         </li>
@@ -35,14 +50,13 @@
             <a class="dropdown-item" href="/partner">Partner</a>
           </div>
         </li>
-
       </ul>
     </div>
   </nav>
 
   <div class="jumbotron">
     <div class="container">
-      <h1 class="display-4">Customer Loyalty Program</h1>
+      <h1 class="display-4 font-weight-bold">Customer Loyalty Program</h1>
       <h4></h4>
       <p>This web application demonstrates a customer loyalty program on <b>blockchain</b> using <b>Fabric Network API</b></p>
       <p><a class="btn btn-primary btn-lg" href="/about" role="button">Learn more &raquo;</a></p>
@@ -53,18 +67,32 @@
 
     <div class="row">
       <div class="col-lg-6 text-center">
-        <h2>Members</h2>
-        <p>Customers can register as Member to this program by creating an account number for identification on the network and access card to sign-in. Once registered they can sign in, to make transactions to earn points and use points, and view all their
-          transactions. </p>
-        <p><a class="btn btn-secondary" href="/member" role="button">Sign In &raquo;</a>
-          <a class="btn btn-secondary" href="/registerMember" role="button">Register &raquo;</a></p>
+        <div class="card">
+          <img class="card-img-top" src="https://www.commbox.io/wp-content/uploads/2019/10/53-1-1024x600.jpg" alt="">
+          <div class="card-body">
+            <h2 class="card-title">Members</h2>
+            <p class="card-text">Customers can register as Member to this program by creating an account number for identification on the network and access card to sign-in. Once registered they can sign in, to make transactions to earn points and use points, and view all their transactions. 
+            </p>
+            <div>
+              <a class="btn btn-primary" href="/member" role="button">Sign In &raquo;</a>
+              <a class="btn btn-warning" href="/register/member" role="button">Register &raquo;</a>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="col-lg-6 text-center">
-        <h2>Partners</h2>
-        <p>For companies part of the program, they can register as Partner on the network by creating an Id on the network and access card to sign-in. They can sign-in to view all transactions made with them and dashboard to view total points allocated and
-          redeemed by members. </p>
-        <p><a class="btn btn-secondary" href="/partner" role="button">Sign In &raquo;</a>
-          <a class="btn btn-secondary" href="/registerPartner" role="button">Register &raquo;</a></p>
+        <div class="card">
+          <img class="card-img-top" src="https://cdn.domestika.org/c_limit,dpr_auto,f_auto,q_auto,w_820/v1568912149/content-items/003/279/793/Social_Media_Customer-original.png?156891214" alt="">
+          <div class="card-body">
+            <h2 class="card-title">Partners</h2>
+            <p class="card-text">For companies part of the program, they can register as Partner on the network by creating an Id on the network and access card to sign-in. They can sign-in to view all transactions made with them and dashboard to view total points allocated and redeemed by members.
+            </p>
+            <div>
+              <a class="btn btn-primary" href="/partner" role="button">Sign In &raquo;</a>
+              <a class="btn btn-warning" href="/register/partner" role="button">Register &raquo;</a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -76,6 +104,9 @@
 
 </html>
 
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="/scripts/index.js"></script>

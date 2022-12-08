@@ -1,3 +1,7 @@
+# VKU_NPC
+# SPDX-License-Identifier: Apache-2.0
+#
+
 # Mac files.
 **/.DS_Store
 .DS_Store
@@ -12,3 +16,10 @@ composer-logs
 
 *.bna
 *.card
+test-network
+
+bin
+builders
+config
+.env
+explorer/organizations

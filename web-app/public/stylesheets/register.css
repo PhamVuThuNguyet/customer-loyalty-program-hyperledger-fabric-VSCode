@@ -1,0 +1,41 @@
+/*
+ * VKU_NPC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+body {
+    background-image: linear-gradient(45deg, #9795f0 0%, #fbc8d4 100%);
+}
+
+.jumbotron {
+    background-image: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);
+}
+
+.register-form {
+    color: rgb(84, 84, 84);
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(5.5px);
+    -webkit-backdrop-filter: blur(5.5px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+
+    border-radius: 5px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.register-form span {
+    color: rgb(107, 105, 105) !important;
+}
+
+.register-form small.text-validate {
+    color: #e74c3c !important;
+}
+
+.form-title {
+    height: 50px;
+    background: linear-gradient(to right, #c471f5 0%, #fa71cd 100%);
+    background: -webkit-linear-gradient(to right, #c471f5 0%, #fa71cd 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
