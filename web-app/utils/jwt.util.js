@@ -9,6 +9,11 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 
+/**
+ * @notice Used to generate token from parameter
+ * @param {*} data Data to encode to token
+ * @returns encode token
+ */
 const generateToken = (data) => {
     return jwt.sign(
         {
@@ -19,6 +24,11 @@ const generateToken = (data) => {
     );
 };
 
+/**
+ * @notice Decode token
+ * @param {*} token String that will be decoded
+ * @returns decoded token => data
+ */
 const decodeToken = (token) => {
     try {
         const data = jwt.verify(token, process.env.JWT_SECRET);

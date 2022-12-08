@@ -6,6 +6,13 @@
 
 'use strict';
 
+/**
+ * @notice Authorize user
+ * @param {*} req Request from client
+ * @param {*} res Response to client
+ * @param {*} next Next function
+ * @returns 403 if not authorization
+ */
 const authorizeMember = (req, res, next) => {
     const member = req.user;
     if (member.role !== 'member') {
@@ -14,6 +21,13 @@ const authorizeMember = (req, res, next) => {
     next();
 };
 
+/**
+ * @notice Authorize partner
+ * @param {*} req Request from client
+ * @param {*} res Response to client
+ * @param {*} next Next function
+ * @returns 403 if not authorization
+ */
 const authorizePartner = (req, res, next) => {
     const partner = req.user;
     if (partner.role !== 'partner') {

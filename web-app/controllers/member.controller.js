@@ -12,6 +12,13 @@ const validate = require('../network/validate.js');
 const { generateToken } = require('../utils/jwt.util');
 
 class MemberController {
+    /**
+     * @dev [POST] /api/members/register
+     * @notice API to create new member
+     * @param {*} req Request from client
+     * @param {*} res Response to client
+     * @returns status 201 if successful, 400 if error in validation, 409 if conflict, 500 for other errors
+     */
     async register(req, res) {
         try {
             const {
@@ -58,6 +65,13 @@ class MemberController {
         }
     }
 
+    /**
+     * @dev [POST] api/members/earn-points
+     * @notice API for member buy products and earn points
+     * @param {*} req Request from client
+     * @param {*} res Response to client
+     * @returns status 200 if successful, 400 if error in validation, 500 for other errors
+     */
     async earnPoints(req, res) {
         try {
             const { accountnumber, cardid, partnerid } = req.body;
@@ -87,6 +101,13 @@ class MemberController {
         }
     }
 
+    /**
+     * @dev [POST] api/members/use-points
+     * @notice API for member buy products by using points
+     * @param {*} req Request from client
+     * @param {*} res Response to client
+     * @returns status 200 if successful, 400 if error in validation, 500 for other errors
+     */
     async usePoints(req, res) {
         try {
             const { accountnumber, cardid, partnerid } = req.body;
@@ -115,6 +136,13 @@ class MemberController {
         }
     }
 
+    /**
+     * @dev [POST] /api/members/data
+     * @notice API for login and get member data
+     * @param {*} req Request from client
+     * @param {*} res Response to client
+     * @returns status 200 if successful, 400 if error in validation, 500 for other errors
+     */
     async data(req, res) {
         try {
             const { cardid } = req.body;
