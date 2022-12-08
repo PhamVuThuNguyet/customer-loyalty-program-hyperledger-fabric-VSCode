@@ -7,6 +7,19 @@
 
 import { toast } from './toast.js';
 
+const selectedPartnerId = '';
+
+function toggleLogoutButton() {
+    const token = localStorage.getItem('token');
+    if (token) {
+        $('#logout-button').css({ display: 'block' });
+        $('#login-button').css({ display: 'none' });
+    } else {
+        $('#logout-button').css({ display: 'none' });
+        $('#login-button').css({ display: 'block' });
+    }
+}
+
 async function updateMember() {
     try {
         const accountnumber = $('.account-number input').val();
@@ -139,7 +152,6 @@ async function earnPoints(points) {
             points,
         };
         document.getElementById('loader').style.display = 'flex';
-        document.getElementById('infoSection').style.display = 'none';
         const token = localStorage.getItem('token');
         if (!token) {
             window.location.replace('/');
@@ -151,12 +163,17 @@ async function earnPoints(points) {
             },
         });
         updateMember();
+        $('.items').html('');
         toast("success", "Transaction successful");
         document.getElementById('loader').style.display = 'none';
-        document.getElementById('infoSection').style.display = 'block';
     } catch (error) {
+        if (error.response.status === 401 || error.response.status === 403) {
+            alert('Your session has expired!');
+            localStorage.removeItem('token');
+            window.location.replace('/member');
+            return;
+        }
         document.getElementById('loader').style.display = 'none';
-        document.getElementById('infoSection').style.display = 'block';
         toast("error", error.response.statusText || 'An error has occurred!');
     }
 }
@@ -171,11 +188,11 @@ $('.earn-partner select').on('change', async function () {
         return;
     }
 
-    let productData = await axios.get('api/products/partner' + partnerid);
+    let productData = await axios.get('api/products/partner/' + partnerid);
 
     productData = productData.data;
 
-    $('items').html(function () {
+    $('.items').html(function () {
         let str = '';
         for (let i = 0; i < productData.length; i++) {
             str += `<div class="item col-md-4 mb-3">
@@ -261,7 +278,6 @@ async function usePoints(points) {
             points,
         };
         document.getElementById('loader').style.display = 'flex';
-        document.getElementById('infoSection').style.display = 'none';
         const token = localStorage.getItem('token');
         if (!token) {
             window.location.replace('/');
@@ -273,12 +289,17 @@ async function usePoints(points) {
             },
         });
         document.getElementById('loader').style.display = 'none';
-        document.getElementById('infoSection').style.display = 'block';
         updateMember();
+        $('.items-redeem').html('');
         toast("success", 'Transaction successful');
     } catch (error) {
+        if (error.response.status === 401 || error.response.status === 403) {
+            alert('Your session has expired!');
+            localStorage.removeItem('token');
+            window.location.replace('/member');
+            return;
+        }
         document.getElementById('loader').style.display = 'none';
-        document.getElementById('infoSection').style.display = 'block';
         toast("error", error.response.statusText || 'An error has occurred!');
     }
 }
@@ -291,12 +312,9 @@ $('.use-partner select').on('change', async function () {
     if (!partnerid) {
         return;
     }
-
     let productData = await axios.get('/api/products/partner/' + partnerid);
 
     productData = productData.data;
-
-    console.log(productData[0]);
 
     $('.items-redeem').html(function () {
         let str = '';
@@ -380,9 +398,8 @@ async function checkLogin() {
 
     if (token) {
         try {
-            const { data } = await axios.post(
+            const { data } = await axios.get(
                 '/api/user-info',
-                {},
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -414,14 +431,3 @@ $('#logout-button > a').on('click', (e) => {
     localStorage.removeItem('token');
     window.location.replace('/');
 });
-
-function toggleLogoutButton() {
-    const token = localStorage.getItem('token');
-    if (token) {
-        $('#logout-button').css({ display: 'block' });
-        $('#login-button').css({ display: 'none' });
-    } else {
-        $('#logout-button').css({ display: 'none' });
-        $('#login-button').css({ display: 'block' });
-    }
-}
