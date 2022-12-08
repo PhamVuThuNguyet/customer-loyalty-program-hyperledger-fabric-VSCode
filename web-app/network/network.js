@@ -277,7 +277,21 @@ module.exports = {
   * @param {String} partnerId Partner Id of partner
   */
     partnerData: async function (cardId, partnerId) {
-
+        let contract = await getContract();
+        try {
+            let partner = await contract.evaluateTransaction('GetState', partnerId);
+            partner = JSON.parse(utf8Decoder.decode(partner));
+            if (partner.password !== cardId) {
+                let error = {};
+                error.error = 'Password is incorrect';
+                return error;
+            }
+            return partner;
+        } catch (err) {
+            let error = {};
+            error.error = err.message;
+            return error;
+        }
     },
 
     /*
