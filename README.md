@@ -1,3 +1,6 @@
+Bug tracker: https://trello.com/b/tJRu3kCA/vkunpc-bug-tracker
+Product backlog: https://trello.com/b/fgFFItAD/vkunpc-kanban
+
 [![Build Status](https://travis-ci.org/IBM/customer-loyalty-program-hyperledger-fabric-VSCode.svg?branch=master)](https://travis-ci.org/IBM/customer-loyalty-program-hyperledger-fabric-VSCode)
 
 # Customer Loyalty Program with blockchain
