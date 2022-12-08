@@ -20,7 +20,7 @@ $('.register-member').click(async function () {
         };
         document.getElementById('registration').style.display = 'none';
         document.getElementById('loader').style.display = 'block';
-        axios.post('/api/members/register', inputData);
+        await axios.post('/api/members/register', inputData);
         document.getElementById('loader').style.display = 'none';
         document.getElementById('successful-registration').style.display =
             'block';
