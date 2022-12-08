@@ -203,6 +203,21 @@ module.exports = {
   * @param {Integer} points Points value
   */
     earnPointsTransaction: async function (cardId, accountNumber, partnerId, points) {
+        let contract = await getContract();
+
+        let earnPoints = {};
+        earnPoints.points = points;
+        earnPoints.member = accountNumber;
+        earnPoints.partner = partnerId;
+
+        try {
+            await contract.submitTransaction('EarnPoints', JSON.stringify(earnPoints));
+            return true;
+        } catch (err) {
+            let error = {};
+            error.error = err.message;
+            return error;
+        }
     },
 
     /*
@@ -213,7 +228,21 @@ module.exports = {
   * @param {Integer} points Points value
   */
     usePointsTransaction: async function (cardId, accountNumber, partnerId, points) {
+        let contract = await getContract();
 
+        let usePoints = {};
+        usePoints.points = points;
+        usePoints.member = accountNumber;
+        usePoints.partner = partnerId;
+
+        try {
+            await contract.submitTransaction('UsePoints', JSON.stringify(usePoints));
+            return true;
+        } catch (err) {
+            let error = {};
+            error.error = err.message;
+            return error;
+        }
     },
 
     /*
