@@ -146,8 +146,7 @@ module.exports = {
         try {
             await contract.submitTransaction('CreateMember', JSON.stringify(member));
 
-            let new_memberId = 'M' + accountNumber;
-            let member_success = await contract.evaluateTransaction('GetState', new_memberId);
+            let member_success = await contract.evaluateTransaction('GetState', accountNumber);
 
             console.log('Create member successfully');
             console.log(JSON.parse(utf8Decoder.decode(member_success)));
@@ -184,8 +183,7 @@ module.exports = {
         try {
             await contract.submitTransaction('CreatePartner', JSON.stringify(partner));
 
-            let new_partnerId = 'P' + partnerId;
-            let partner_success = await contract.evaluateTransaction('GetState', new_partnerId);
+            let partner_success = await contract.evaluateTransaction('GetState', partnerId);
 
             console.log('Create partner successfully');
             console.log(JSON.parse(utf8Decoder.decode(partner_success)));
@@ -224,7 +222,24 @@ module.exports = {
   * @param {String} accountNumber Account number of member
   */
     memberData: async function (cardId, accountNumber) {
+        let contract = await getContract();
 
+        try {
+            let member = await contract.evaluateTransaction('GetState', accountNumber);
+            member = JSON.parse(utf8Decoder.decode(member));
+
+            if (member.password !== cardId) {
+                let error = {};
+                error.error = 'Password is incorrect';
+                return error;
+            }
+
+            return member;
+        } catch (err) {
+            let error = {};
+            error.error = err.message;
+            return error;
+        }
     },
 
     /*
