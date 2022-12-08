@@ -12,6 +12,13 @@ const analysis = require('../network/analysis.js');
 const { generateToken } = require('../utils/jwt.util');
 
 class PartnerController {
+    /**
+     * @dev [POST] /api/partner/register
+     * @notice API to create new partner
+     * @param {*} req Request from client
+     * @param {*} res Response to client
+     * @returns status 201 if successful, 400 if error in validation, 409 if conflict, 500 for other errors
+     */
     async register(req, res) {
         try {
             const { name, cardid } = req.body;
@@ -46,6 +53,13 @@ class PartnerController {
         }
     }
 
+    /**
+     * @dev [POST] /api/partners/data
+     * @notice API for login and get partner data
+     * @param {*} req Request from client
+     * @param {*} res Response to client
+     * @returns status 200 if successful, 400 if error in validation, 500 for other errors
+     */
     async data(req, res) {
         try {
             const { cardid } = req.body;
