@@ -8,6 +8,7 @@
 //get the libraries to call
 const network = require('../network/network.js');
 const validate = require('../network/validate.js');
+const { generateToken } = require('../utils/jwt.util');
 
 class MemberController {
     async register(req, res) {
@@ -160,6 +161,11 @@ class MemberController {
             returnData.usePointsResults = usePointsResults;
             returnData.earnPointsResult = earnPointsResults;
             returnData.partnersData = partnersInfo;
+            returnData.token = generateToken({
+                id: accountnumber,
+                cardid,
+                role: 'member',
+            });
 
             res.json(returnData);
         } catch (error) {

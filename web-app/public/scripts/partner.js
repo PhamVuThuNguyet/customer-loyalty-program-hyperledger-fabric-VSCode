@@ -12,6 +12,7 @@ $('.sign-in-partner').click(async function () {
         };
         document.getElementById('loader').style.display = 'block';
         const { data } = await axios.post('/api/partners/data', inputData);
+        localStorage.setItem('token', data.token);
         document.getElementById('loader').style.display = 'none';
         $('.heading').html(function () {
             let str = '<h2><b> ' + data.name + ' </b></h2>';

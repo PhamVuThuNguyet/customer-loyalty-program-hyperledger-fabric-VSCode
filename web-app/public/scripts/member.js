@@ -11,6 +11,7 @@ async function updateMember() {
         };
         document.getElementById('loader').style.display = 'block';
         const { data } = await axios.post('/api/members/data', inputData);
+        localStorage.setItem('token', data.token);
         document.getElementById('loader').style.display = 'none';
         $('.heading').html(function () {
             let str =
