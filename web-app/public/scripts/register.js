@@ -19,7 +19,7 @@ $('.register-member').click(async function () {
             phonenumber,
         };
         document.getElementById('registration').style.display = 'none';
-        document.getElementById('loader').style.display = 'block';
+        document.getElementById('loader').style.display = 'flex';
         await axios.post('/api/members/register', inputData);
         document.getElementById('loader').style.display = 'none';
         document.getElementById('successful-registration').style.display =
@@ -46,7 +46,7 @@ $('.register-partner').click(async function () {
 
     try {
         document.getElementById('registration').style.display = 'none';
-        document.getElementById('loader').style.display = 'block';
+        document.getElementById('loader').style.display = 'flex';
         await axios.post('/api/partners/register', data);
         document.getElementById('loader').style.display = 'none';
         document.getElementById('successful-registration').style.display =
