@@ -3,23 +3,26 @@
  * SPDX-License-Identifier: Apache-2.0
  *
  */
+
 'use strict';
 
 //get the libraries to call
 const network = require('../network/network.js');
 const validate = require('../network/validate.js');
+const { generateToken } = require('../utils/jwt.util');
 
 class MemberController {
     async register(req, res) {
         try {
             const {
-                accountnumber,
                 cardid,
                 firstname,
                 lastname,
                 email,
                 phonenumber,
             } = req.body;
+
+            const accountnumber = 'M' + req.body.accountnumber;
 
             const validation = await validate.validateMemberRegistration(
                 cardid,
@@ -112,8 +115,8 @@ class MemberController {
 
     async data(req, res) {
         try {
-            const { accountnumber, cardid } = req.body;
-            //declare variables to retrieve from request
+            const { cardid } = req.body;
+            const accountnumber = 'M' + req.body.accountnumber;
 
             const returnData = {};
 
@@ -160,6 +163,11 @@ class MemberController {
             returnData.usePointsResults = usePointsResults;
             returnData.earnPointsResult = earnPointsResults;
             returnData.partnersData = partnersInfo;
+            returnData.token = generateToken({
+                id: accountnumber,
+                cardid,
+                role: 'member',
+            });
 
             res.json(returnData);
         } catch (error) {

@@ -11,6 +11,7 @@ async function updateMember() {
         };
         document.getElementById('loader').style.display = 'block';
         const { data } = await axios.post('/api/members/data', inputData);
+        localStorage.setItem('token', data.token);
         document.getElementById('loader').style.display = 'none';
         $('.heading').html(function () {
             let str =
@@ -136,7 +137,16 @@ async function earnPoints(points) {
         };
         document.getElementById('loader').style.display = 'block';
         document.getElementById('infoSection').style.display = 'none';
-        await axios.post('/api/members/earn-points', inputData);
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.replace('/');
+            return;
+        }
+        await axios.post('/api/members/earn-points', inputData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
         updateMember();
         alert('Transaction successful');
         document.getElementById('loader').style.display = 'none';
@@ -187,7 +197,16 @@ async function usePoints(points) {
         };
         document.getElementById('loader').style.display = 'block';
         document.getElementById('infoSection').style.display = 'none';
-        await axios.post('/api/members/use-points', inputData);
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.replace('/');
+            return;
+        }
+        await axios.post('/api/members/use-points', inputData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
         document.getElementById('loader').style.display = 'none';
         document.getElementById('infoSection').style.display = 'block';
         updateMember();
@@ -216,3 +235,37 @@ $('.use-points-transaction').click(function () {
     const formPoints = $('.usePoints input').val();
     usePoints(formPoints);
 });
+
+async function checkLogin() {
+    const token = localStorage.getItem('token');
+
+    if (token) {
+        try {
+            const { data } = await axios.post(
+                '/api/user-info',
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            if (data.role === 'member') {
+                $('.account-number input').val(data.id);
+                $('.card-id input').val(data.cardid);
+                await updateMember();
+                document.querySelector('body').style.display = 'block';
+            } else {
+                window.location.replace('/partner');
+            }
+        } catch (error) {
+            localStorage.removeItem('token');
+            alert('Your session is expired');
+            document.querySelector('body').display = 'block';
+        }
+    } else {
+        document.querySelector('body').style.display = 'block';
+    }
+}
+
+checkLogin();

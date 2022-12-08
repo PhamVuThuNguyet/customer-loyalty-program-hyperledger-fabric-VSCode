@@ -9,11 +9,13 @@
 const network = require('../network/network.js');
 const validate = require('../network/validate.js');
 const analysis = require('../network/analysis.js');
+const { generateToken } = require('../utils/jwt.util');
 
 class PartnerController {
     async register(req, res) {
         try {
-            const { name, partnerid, cardid } = req.body;
+            const { name, cardid } = req.body;
+            const partnerid = 'P' + req.body.partnerid;
 
             const validation = validate.validatePartnerRegistration(
                 cardid,
@@ -38,13 +40,15 @@ class PartnerController {
 
             res.sendStatus(201);
         } catch (error) {
+            console.log('error', error);
             res.sendStatus(500);
         }
     }
 
     async data(req, res) {
         try {
-            const { partnerid, cardid } = req.body;
+            const { cardid } = req.body;
+            const partnerid = 'P' + req.body.partnerid;
 
             const returnData = {};
 
@@ -86,8 +90,14 @@ class PartnerController {
             returnData.pointsGiven = analysis.totalPointsGiven(
                 earnPointsResults
             );
+            returnData.token = generateToken({
+                id: partnerid,
+                cardid,
+                role: 'member',
+            });
             res.json(returnData);
         } catch (error) {
+            console.log(error);
             res.sendStatus(500);
         }
     }

@@ -4,20 +4,26 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "NODE_ENV=production node index.js",
+    "test": "NODE_ENV=test mocha --timeout 10000 --exit",
     "lint": "eslint --ignore-path ../.eslintignore ."
   },
   "dependencies": {
     "@hyperledger/fabric-gateway": "^1.1.1",
     "body-parser": "^1.19.0",
+    "chai": "^4.3.7",
+    "chai-http": "^4.3.0",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
     "express": "^4.17.1",
     "fabric-ca-client": "^2.2.16",
     "fabric-network": "^2.2.16",
+    "jsonwebtoken": "^8.5.1",
+    "mocha": "^10.1.0",
+    "mongoose": "^6.8.0",
     "morgan": "^1.9.1",
+    "random-number": "^0.0.9",
     "request": "^2.88.0"
   },
   "devDependencies": {
