@@ -10,8 +10,13 @@ const router = express.Router();
 const viewRoute = require('./view.route');
 const partnerRoute = require('./partner.route');
 const memberRoute = require('./member.route');
+const productRoute = require('./product.route');
 
 const defaultRoutes = [
+    {
+        route: productRoute,
+        path: '/api/products',
+    },
     {
         route: memberRoute,
         path: '/api/members',
