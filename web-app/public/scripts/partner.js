@@ -41,7 +41,7 @@ async function getProductList() {
                         ${productData[i].name}
                     </h5>
                     <h5 class="price-text card-text font-weight-bold">
-                      Price: $${productData[i].price}
+                      Price: ${productData[i].price} dollars or ${productData[i].price * 10} points
                     </h5>
                     <input class="product-checkbox" data-id="${productData[i]._id}" type="checkbox" id="${productData[i]._id}" name="${productData[i].name}" value="${productData[i].price}" hidden/>
                   </div>
