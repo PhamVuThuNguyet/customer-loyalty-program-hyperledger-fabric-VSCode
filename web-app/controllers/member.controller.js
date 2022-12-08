@@ -22,7 +22,7 @@ class MemberController {
                 phonenumber,
             } = req.body;
 
-            const accountnumber = 'M' + req.body.accountnumber;
+            let accountnumber = req.body.accountnumber;
 
             const validation = await validate.validateMemberRegistration(
                 cardid,
@@ -36,6 +36,8 @@ class MemberController {
                 res.statusMessage = validation.error;
                 return res.sendStatus(400);
             }
+
+            accountnumber = 'M' + accountnumber;
 
             const response = await network.registerMember(
                 cardid,
