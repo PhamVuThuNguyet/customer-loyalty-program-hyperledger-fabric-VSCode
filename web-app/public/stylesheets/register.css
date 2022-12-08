@@ -25,9 +25,12 @@ body {
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
-.register-form span,
-.register-form small {
+.register-form span {
     color: rgb(107, 105, 105) !important;
+}
+
+.register-form small.text-validate {
+    color: #e74c3c !important;
 }
 
 .form-title {
