@@ -15,13 +15,15 @@ class PartnerController {
     async register(req, res) {
         try {
             const { name, cardid } = req.body;
-            const partnerid = 'P' + req.body.partnerid;
+            let partnerid = req.body.partnerid;
 
-            const validation = validate.validatePartnerRegistration(
+            const validation = await validate.validatePartnerRegistration(
                 cardid,
                 partnerid,
                 name
             );
+
+            partnerid = 'P' + partnerid;
 
             if (validation.error) {
                 res.statusMessage = validation.error;
@@ -40,7 +42,6 @@ class PartnerController {
 
             res.sendStatus(201);
         } catch (error) {
-            console.log('error', error);
             res.sendStatus(500);
         }
     }
@@ -97,7 +98,6 @@ class PartnerController {
             });
             res.json(returnData);
         } catch (error) {
-            console.log(error);
             res.sendStatus(500);
         }
     }
