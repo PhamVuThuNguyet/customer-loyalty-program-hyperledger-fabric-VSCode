@@ -14,13 +14,14 @@ class MemberController {
     async register(req, res) {
         try {
             const {
-                accountnumber,
                 cardid,
                 firstname,
                 lastname,
                 email,
                 phonenumber,
             } = req.body;
+
+            const accountnumber = 'P' + req.body.accountnumber;
 
             const validation = await validate.validateMemberRegistration(
                 cardid,
@@ -113,8 +114,8 @@ class MemberController {
 
     async data(req, res) {
         try {
-            const { accountnumber, cardid } = req.body;
-            //declare variables to retrieve from request
+            const { cardid } = req.body;
+            const accountnumber = 'P' + req.body.accountnumber;
 
             const returnData = {};
 

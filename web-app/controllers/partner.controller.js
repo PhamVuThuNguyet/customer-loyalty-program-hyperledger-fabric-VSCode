@@ -14,7 +14,8 @@ const { generateToken } = require('../utils/jwt.util');
 class PartnerController {
     async register(req, res) {
         try {
-            const { name, partnerid, cardid } = req.body;
+            const { name, cardid } = req.body;
+            const partnerid = 'P' + req.body.partnerid;
 
             const validation = validate.validatePartnerRegistration(
                 cardid,
@@ -45,7 +46,8 @@ class PartnerController {
 
     async data(req, res) {
         try {
-            const { partnerid, cardid } = req.body;
+            const { cardid } = req.body;
+            const partnerid = 'P' + req.body.partnerid;
 
             const returnData = {};
 

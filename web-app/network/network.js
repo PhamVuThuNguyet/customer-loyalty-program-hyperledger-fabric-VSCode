@@ -93,7 +93,7 @@ async function getContract() {
         const contract = network.getContract(chaincodeName);
         return contract;
     } catch (err) {
-        let error = {}
+        let error = {};
         error.error = err.message;
         return error;
     }
@@ -109,7 +109,7 @@ module.exports = {
         try {
             await contract.submitTransaction('instantiate');
         } catch (err) {
-            let error = {}
+            let error = {};
             error.error = err.message;
             return error;
         }
@@ -124,7 +124,39 @@ module.exports = {
   * @param {String} email Member email
   */
     registerMember: async function (cardId, accountNumber, firstName, lastName, email, phoneNumber) {
+        let contract = await getContract();
 
+        try {
+            await contract.evaluateTransaction('GetSate', accountNumber);
+            let error = {};
+            error.error = 'Member already exists';
+        } catch (err) {
+            console.log('OK. Creating...');
+        }
+
+        let member = {};
+        member.accountNumber = accountNumber;
+        member.password = cardId;
+        member.firstName = firstName;
+        member.lastName = lastName;
+        member.email = email;
+        member.phoneNumber = phoneNumber;
+        member.points = 0;
+
+        try {
+            await contract.submitTransaction('CreateMember', JSON.stringify(member));
+
+            let new_memberId = 'M' + accountNumber;
+            let member_success = await contract.evaluateTransaction('GetState', new_memberId);
+
+            console.log('Create member successfully');
+            console.log(JSON.parse(utf8Decoder.decode(member_success)));
+            return true;
+        } catch (err) {
+            let error = {};
+            error.error = err.message;
+            return error;
+        }
     },
 
     /*
@@ -134,7 +166,35 @@ module.exports = {
   * @param {String} name Partner name
   */
     registerPartner: async function (cardId, partnerId, name) {
+        let contract = await getContract();
 
+        try {
+            await contract.evaluateTransaction('GetState', partnerId);
+            let error = {};
+            error.error = 'Partner already exists';
+        } catch (err) {
+            console.log('OK. Creating...');
+        }
+
+        let partner = {};
+        partner.id = partnerId;
+        partner.name = name;
+        partner.password = cardId;
+
+        try {
+            await contract.submitTransaction('CreatePartner', JSON.stringify(partner));
+
+            let new_partnerId = 'P' + partnerId;
+            let partner_success = await contract.evaluateTransaction('GetState', new_partnerId);
+
+            console.log('Create partner successfully');
+            console.log(JSON.parse(utf8Decoder.decode(partner_success)));
+            return true;
+        } catch (err) {
+            let error = {};
+            error.error = err.message;
+            return error;
+        }
     },
 
     /*
