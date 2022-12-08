@@ -13,3 +13,7 @@ composer-logs
 *.bna
 *.card
 test-network
+
+bin
+builders
+config
