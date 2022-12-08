@@ -158,16 +158,58 @@ async function earnPoints(points) {
     }
 }
 
-$('.earn-points-30').click(function () {
-    earnPoints(30);
-});
+$('.earn-partner select').on('change', async function () {
+    //update items
+    const partnerid = $('.earn-partner select').find(':selected').attr('partner-id');
 
-$('.earn-points-80').click(function () {
-    earnPoints(80);
-});
+    if (!partnerid) {
+        return;
+    }
 
-$('.earn-points-200').click(function () {
-    earnPoints(200);
+    let productData = await axios.get('api/products/partner' + partnerid);
+
+    productData = productData.data;
+
+    $('items').html(function () {
+        let str = '';
+        for (let i = 0; i < productData.length; i++) {
+            str += `<div class="item col-md-4 mb-3">
+                        <label class="product-label" for="${productData[i]._id}">
+                            <div class="card card-${productData[i]._id}">
+                                <img class="group list-group-image" src="${productData[i].image}" alt="" />
+                                <div class="card-header">
+                                    <h5 class="card-title">
+                                        ${productData[i].name}
+                                    </h5>
+                                </div>
+                                <div class="card-body p-3">
+                                    <h5 class="price-text card-text font-weight-bold">
+                                        Price: $${productData[i].price}
+                                    </h5>
+                                    <input class="product-checkbox" data-id="${productData[i]._id}" type="checkbox" id="${productData[i]._id}" name="${productData[i].name}" value="${productData[i].price}" hidden/>
+                                </div>
+                            </div>
+                        </label>
+                    </div>`;
+        }
+        return str;
+    });
+
+    $('.product-checkbox').on('change', function () {
+        const productId = $(this).attr('data-id');
+        const isChecked = $(this).prop('checked');
+        if (isChecked) {
+            $(`.card-${productId}`).addClass('active');
+        } else {
+            $(`.card-${productId}`).removeClass('active');
+        }
+        if ($('.items input[type=checkbox]:checked').length > 0) {
+            $('#purchase-btn').prop('disabled', false);
+        } else {
+            $('#purchase-btn').prop('disabled', true);
+        }
+    });
+
 });
 
 //check user input and call server
@@ -218,17 +260,64 @@ async function usePoints(points) {
     }
 }
 
-$('.use-points-50').click(function () {
-    usePoints(50);
+$('.use-partner select').on('change', async function () {
+    //update items
+    const partnerid = $('.use-partner select')
+        .find(':selected')
+        .attr('partner-id');
+    if (!partnerid) {
+        return;
+    }
+
+    let productData = await axios.get('/api/products/partner/' + partnerid);
+
+    productData = productData.data;
+
+    console.log(productData[0]);
+
+    $('.items-redeem').html(function () {
+        let str = '';
+
+        for (let i = 0; i < productData.length; i++) {
+            str += `<div class="item col-md-4 mb-3">
+                        <label class="product-label" for="${productData[i]._id}">
+                            <div class="card card-${productData[i]._id}">
+                                <img class="group list-group-image" src="${productData[i].image}" alt="" />
+                                <div class="card-header">
+                                    <h5 class="card-title">
+                                        ${productData[i].name}
+                                    </h5>
+                                </div>
+                                <div class="card-body p-3">
+                                    <h5 class="point-text card-text font-weight-bold">
+                                        Points: ${productData[i].price * 10}
+                                    </h5>
+                                    <input class="product-checkbox-redeem" data-id="${productData[i]._id}" type="checkbox" id="${productData[i]._id}" name="${productData[i].name}" value="${productData[i].price}" hidden/>
+                                </div>
+                            </div>
+                        </label>
+                    </div>`;
+        }
+        return str;
+    });
+
+    $('.product-checkbox-redeem').on('change', function () {
+        const productId = $(this).attr('data-id');
+        const isChecked = $(this).prop('checked');
+        if (isChecked) {
+            $(`.card-${productId}`).addClass('active');
+        } else {
+            $(`.card-${productId}`).removeClass('active');
+        }
+        if ($('.items-redeem input[type=checkbox]:checked').length > 0) {
+            $('#redeem-btn').prop('disabled', false);
+        } else {
+            $('#redeem-btn').prop('disabled', true);
+        }
+    });
+
 });
 
-$('.use-points-150').click(function () {
-    usePoints(150);
-});
-
-$('.use-points-200').click(function () {
-    usePoints(200);
-});
 
 //check user input and call server
 $('.use-points-transaction').click(function () {

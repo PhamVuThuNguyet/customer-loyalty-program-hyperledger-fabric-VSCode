@@ -1,3 +1,6 @@
+<!-- VKU_NPC
+SPDX-License-Identifier: Apache-2.0 -->
+
 <!doctype html>
 <html>
 
@@ -13,6 +16,7 @@
     integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
   <link rel="stylesheet" href="stylesheets/style.css">
   <link rel="stylesheet" href="stylesheets/base.css">
+  <link rel="stylesheet" href="stylesheets/member.css">
 </head>
 
 <body class="bg-light">
@@ -48,20 +52,28 @@
   </nav>
 
   <div class="jumbotron" id="loginSection" style="display:block;">
-    <div class="container">
-      <h2>Member Sign In</h2>
-      <br>
-      <div class="account-number">
-        <p> Enter Account Number
-          <input>
-        </p>
+    <div class="container h-100">
+      <div class="row h-100">
+        <div class="col-md-6 m-auto">
+          <div class="card">
+            <div class="card-body">
+              <h2 class="text-center font-weight-bold card-title">Member Sign In</h2>
+              <br>
+              <div class="account-number mb-3">
+                <input class="form-control" placeholder="Enter Account Number" required>
+              </div>
+              <div class="card-id mb-3">
+                <input class="form-control" placeholder="Enter Access Card ID" required>
+              </div>
+              <div class="row">
+                <div class="col-md-4 mx-auto">
+                  <button class="form-control btn-lg btn btn-form-submit sign-in-member">SIGN IN</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="card-id">
-        <p> Enter Access Card ID
-          <input>
-        </p>
-      </div>
-      <button class="btn btn-primary sign-in-member">SIGN IN</button>
     </div>
   </div>
 

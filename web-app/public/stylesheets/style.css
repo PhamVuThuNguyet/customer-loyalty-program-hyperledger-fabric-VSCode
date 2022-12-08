@@ -17,7 +17,7 @@
  /*
  * VKU_NPC
  * SPDX-License-Identifier: Apache-2.0
- *
+ *5
  */
 
 /* style.css
@@ -60,7 +60,6 @@ body {
   margin-right: .75rem;
   margin-left: .75rem;
 }
-
 
 /* Featurettes
 ------------------------- */
@@ -124,7 +123,7 @@ td {
   border-radius: 10px;
   background-color: transparent;
   border: 1px solid rgba(255, 255, 255, .5);
-  color: #fff;
+  color: rgb(63, 63, 63);
   transition: all 0.25s ease-in-out;
 }
 
