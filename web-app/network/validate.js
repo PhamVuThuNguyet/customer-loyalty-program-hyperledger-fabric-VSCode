@@ -2,14 +2,24 @@
 
 //stackoverflow
 function validateEmail(email) {
-    let re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
 }
 
 //stackoverflow
 function validatePhoneNumber(phoneNumber) {
-    let re = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/;
+    const re = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/;
     return re.test(String(phoneNumber));
+}
+
+function validateName(name) {
+    const re = /^[a-zA-Z\s]*$/;
+    return re.test(String(name));
+}
+
+function validateLetterAndNumber(str) {
+    const re = /^[0-9a-zA-Z]+$/;
+    return re.test(str);
 }
 
 module.exports = {
@@ -43,19 +53,19 @@ module.exports = {
         } else if (String(cardId).length < 1) {
             response.error = 'Enter access key';
             return response;
-        } else if (!/^[0-9a-zA-Z]+$/.test(cardId)) {
+        } else if (!validateLetterAndNumber(cardId)) {
             response.error = 'Card id can be letters and numbers only';
             return response;
         } else if (firstName.length < 1) {
             response.error = 'Enter first name';
             return response;
-        } else if (!/^[a-zA-Z]+$/.test(firstName)) {
+        } else if (!validateName(firstName)) {
             response.error = 'First name must be letters only';
             return response;
         } else if (lastName.length < 1) {
             response.error = 'Enter last name';
             return response;
-        } else if (!/^[a-zA-Z]+$/.test(lastName)) {
+        } else if (!validateName(lastName)) {
             response.error = 'Last name must be letters only';
             return response;
         } else if (email.length < 1) {
@@ -87,19 +97,19 @@ module.exports = {
         if (String(cardId).length < 1) {
             response.error = 'Enter access key';
             return response;
-        } else if (!/^[0-9a-zA-Z]+$/.test(cardId)) {
+        } else if (!validateLetterAndNumber(cardId)) {
             response.error = 'Access key can be letters and numbers only';
             return response;
         } else if (partnerId.length < 1) {
             response.error = 'Enter partner id';
             return response;
-        } else if (!/^[0-9a-zA-Z]+$/.test(partnerId)) {
+        } else if (!validateLetterAndNumber(partnerId)) {
             response.error = 'Partner id can be letters and numbers only';
             return response;
         } else if (name.length < 1) {
             response.error = 'Enter company name';
             return response;
-        } else if (!/^[a-zA-Z]+$/.test(name)) {
+        } else if (!validateName(name)) {
             response.error = 'Company name must be letters only';
             return response;
         } else {
@@ -112,7 +122,6 @@ module.exports = {
         //verify input otherwise return error with an informative message
         if (isNaN(points)) {
             response.error = 'Points must be number';
-            console.log(response.error);
             return response;
         } else {
             return Math.round(points);
